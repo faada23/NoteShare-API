@@ -1,0 +1,14 @@
+API.Web/bin
+API.Web/obj
+API.Web/appsettings.Development.json
+API.Web/appsettings.json
+API.Persistence/bin
+API.Persistence/obj
+API.Infrastructure/obj
+API.Infrastructure/bin
+API.Core/bin
+API.Core/obj
+API.Application/bin
+API.Application/obj
+
+
