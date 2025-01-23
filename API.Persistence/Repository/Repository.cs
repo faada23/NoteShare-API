@@ -10,27 +10,31 @@ public class Repository<T> : IRepository<T> where T : class
         dbSet = _db.Set<T>();
     }
 
-    public void Insert(T entity)
+    public async Task Insert(T entity)
     {
-        dbSet.Add(entity);
+        await dbSet.AddAsync(entity);
     }
 
-    public virtual void Delete(T entity)
+    public Task Delete(T entity)
     {
-         if (dbSet.Entry(entity).State == EntityState.Detached)
+        if (dbSet.Entry(entity).State == EntityState.Detached)
             {
                 dbSet.Attach(entity);
             }
             dbSet.Remove(entity);
+
+        return Task.CompletedTask;
     }
 
-    public void Delete(int id)
+    public Task Delete(Guid id)
     {
         T entity = dbSet.Find(id);
         dbSet.Remove(entity);
+
+        return Task.CompletedTask;
     }
 
-    public IEnumerable<T> GetAll(string? includeProperties = null)
+    public async Task<IEnumerable<T>> GetAll(string? includeProperties = null)
     {
         IQueryable<T> query = dbSet;
         if (!string.IsNullOrEmpty(includeProperties))
@@ -40,10 +44,10 @@ public class Repository<T> : IRepository<T> where T : class
                 query = query.Include(includeProp);
             }
         }
-        return query.ToList();
+        return await query.ToListAsync();
     }
 
-    public T GetByFilter(System.Linq.Expressions.Expression<Func<T, bool>> filter, string? includeProperties = null)
+    public async Task<T> GetByFilter(System.Linq.Expressions.Expression<Func<T, bool>> filter, string? includeProperties = null)
     {
         IQueryable<T> query = dbSet;
         query = query.Where(filter);
@@ -53,13 +57,14 @@ public class Repository<T> : IRepository<T> where T : class
                 query = query.Include(includeProp);
             }
         }
-        return query.FirstOrDefault();
+        return await query.FirstOrDefaultAsync();
     }
 
 
-    public void Update(T entity)
+    public Task Update(T entity)
     {
         dbSet.Update(entity);
+        return Task.CompletedTask;
     }
     
 }

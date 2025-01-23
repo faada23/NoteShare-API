@@ -1,11 +1,11 @@
 public class UnitOfWork : IUnitOfWork
 {   
     public DatabaseContext DbContext {get; private set;}
-    public Repository<Role> RoleRepository {get; private set;}
+    public IRepository<Role> RoleRepository {get; private set;}
 
-    public Repository<User> UserRepository {get; private set;}
+    public IRepository<User> UserRepository {get; private set;}
 
-    public Repository<Note> NoteRepository {get; private set;}
+    public IRepository<Note> NoteRepository {get; private set;}
 
     public UnitOfWork(DatabaseContext dbContext){
         DbContext = dbContext;
@@ -13,8 +13,8 @@ public class UnitOfWork : IUnitOfWork
         RoleRepository = new Repository<Role>(DbContext);
         NoteRepository = new Repository<Note>(DbContext);
     }
-    public void Save()
+    public async Task SaveAsync()
     {
-        DbContext.SaveChanges();
+        await DbContext.SaveChangesAsync();
     }
 }

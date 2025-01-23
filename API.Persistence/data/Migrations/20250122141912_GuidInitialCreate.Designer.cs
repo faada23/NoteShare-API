@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Persistence.data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250121130508_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250122141912_GuidInitialCreate")]
+    partial class GuidInitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,11 +26,9 @@ namespace API.Persistence.data.Migrations
 
             modelBuilder.Entity("Note", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -49,8 +47,8 @@ namespace API.Persistence.data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -61,11 +59,9 @@ namespace API.Persistence.data.Migrations
 
             modelBuilder.Entity("Role", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -78,11 +74,11 @@ namespace API.Persistence.data.Migrations
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("usersId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("usersId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("RolesId", "usersId");
 
@@ -93,11 +89,9 @@ namespace API.Persistence.data.Migrations
 
             modelBuilder.Entity("User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -115,7 +109,7 @@ namespace API.Persistence.data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Note", b =>
