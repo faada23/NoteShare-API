@@ -1,3 +1,4 @@
+using API.Core.Models;
 public interface IUnitOfWork 
 {
     public IRepository<Role> RoleRepository {get; }

@@ -1,3 +1,5 @@
+using API.Core.Models;
+
 public class UnitOfWork : IUnitOfWork
 {   
     public DatabaseContext DbContext {get; private set;}

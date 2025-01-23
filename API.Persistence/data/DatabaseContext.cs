@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using API.Core.Models;
 
 public class DatabaseContext : DbContext
 {
@@ -22,31 +23,46 @@ public class DatabaseContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // var users = new[]
-        // {
-        //     new User
-        //     {
-        //         Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-        //         Username = "admin",
-        //         PasswordHash = "123", // хеш для "admin123"
-        //         IsBanned = false,
-        //         CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-        //         Roles = new List<Role>(),
-        //         Notes = new List<Note>()
-        //     },
-        //     new User
-        //     {
-        //         Id = Guid.Parse("00000000-0000-0000-0000-000000000002"),
-        //         Username = "user",
-        //         PasswordHash = "15124", // хеш для "user123"
-        //         IsBanned = false,
-        //         CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-        //         Roles = new List<Role>(),
-        //         Notes = new List<Note>()
-        //     }
-        // };
 
-        // modelBuilder.Entity<User>().HasData(users);
+        var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        var userId = Guid.Parse("00000000-0000-0000-0000-000000000002");
+        var guestId = Guid.Parse("00000000-0000-0000-0000-000000000003");
+
+        var users = new[]
+        {
+            new User
+            {
+                Id = adminId,
+                Username = "admin",
+                PasswordHash = "admin123",
+                IsBanned = false,
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Roles = new List<Role>(),
+                Notes = new List<Note>()
+            },
+            new User
+            {
+                Id = userId,
+                Username = "user",
+                PasswordHash = "user123",
+                IsBanned = false,
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Roles = new List<Role>(),
+                Notes = new List<Note>()
+            },
+            new User
+            {
+                Id = guestId,
+                Username = "guest",
+                PasswordHash = "guest123",
+                IsBanned = true,
+                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                Roles = new List<Role>(),
+                Notes = new List<Note>()
+            }
+        };
+        
+        modelBuilder.Entity<User>().HasData(users);
     }
 
 }

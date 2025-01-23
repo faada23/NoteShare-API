@@ -1,4 +1,6 @@
 using System.Dynamic;
+using API.Core.Models;
+using API.Application.DTOs;
 
 public class UserService : IUserService
 {
@@ -17,19 +19,20 @@ public class UserService : IUserService
     public async Task<IEnumerable<User>> GetAllUsers()
     {
         return await UnitOfWork.UserRepository.GetAll();
+
     }
 
-    public Task CreateUser()
+    public async Task CreateUser(User user)
+    {
+        await UnitOfWork.UserRepository.Insert(user);
+    }
+
+    public Task UpdateUser(User user)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateUser()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteUser()
+    public Task DeleteUser(Guid id)
     {
         throw new NotImplementedException();
     }

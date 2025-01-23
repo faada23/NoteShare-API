@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using API.Core.Models;
+using API.Application.DTOs;
 
 [ApiController]
-[Route("{controller}")]
+[Route("[controller]")]
 public class UserController : Controller
 {   
     private readonly ILogger<UserController> _logger;
@@ -16,21 +18,26 @@ public class UserController : Controller
         _userService = userService;
     }
 
-    public async Task<ActionResult<IEnumerable<User>>> GetAll()
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<UserGet>>> GetAll()
     {
-        var response =  await _userService.GetAllUsers();
+        var users = await UnitOfWork.UserRepository.GetAll();
+        var response = users.Select(p => new UserGet(p.Id,p.Username,p.IsBanned,p.CreatedAt,p.Notes));
         return Ok(response);
     }
 
-    public async Task<ActionResult<Task<User>>> GetByFilter(Guid id)
+    [HttpGet("id")]
+    public async Task<ActionResult<UserGet>> GetByFilter(Guid id)
     {
-        var response = await _userService.GetUserById(id);
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+        var response = new UserGet(user.Id,user.Username,user.IsBanned,user.CreatedAt,user.Notes);
         return Ok(response);
     }
 
     [HttpPost]
-    public IActionResult Create()
-    {
+    public IActionResult Create([FromBody] UserCreate userCreate)
+    {   
+        //доделать
         return Ok();
     }
 

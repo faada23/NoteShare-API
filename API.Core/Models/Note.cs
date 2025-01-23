@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace API.Core.Models;
 public class Note{
     public Guid Id {get;set;}
     [Required]
