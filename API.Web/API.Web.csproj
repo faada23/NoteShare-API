@@ -3,6 +3,7 @@
     <ProjectReference Include="..\API.Persistence\API.Persistence.csproj" />
     <ProjectReference Include="..\API.Application\API.Application.csproj" />
     <ProjectReference Include="..\API.Core\API.Core.csproj" />
+    <ProjectReference Include="..\API.Infrastructure\API.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />

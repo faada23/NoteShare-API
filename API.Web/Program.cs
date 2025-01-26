@@ -8,6 +8,10 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("NoteShareConnection")));
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IAuthService,AuthService>();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWTSettings"));
+builder.Services.AddScoped<JwtProvider>();
+builder.Services.AddAuth(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -28,6 +32,7 @@ app.UseRouting();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

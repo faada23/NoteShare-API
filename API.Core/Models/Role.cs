@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace API.Core.Models;
 public class Role{
@@ -6,5 +7,6 @@ public class Role{
     [Required]
     public string Name {get;set;} = null!;
 
+    [JsonIgnore]
     public ICollection<User>? users {get;set;}
 }
