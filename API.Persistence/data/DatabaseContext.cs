@@ -27,6 +27,8 @@ public class DatabaseContext : DbContext
         var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");
         var userId = Guid.Parse("00000000-0000-0000-0000-000000000002");
         var guestId = Guid.Parse("00000000-0000-0000-0000-000000000003");
+        var userRoleId = Guid.Parse("00000000-0000-0000-0000-000000000004");
+        var moderatorRoleId = Guid.Parse("00000000-0000-0000-0000-000000000005");
 
         var users = new[]
         {
@@ -61,6 +63,15 @@ public class DatabaseContext : DbContext
                 Notes = new List<Note>()
             }
         };
+
+        modelBuilder.Entity<Role>(b =>
+        {
+            b.HasData(
+                new Role { Id = moderatorRoleId, Name = "Moderator" },  
+                new Role { Id = userRoleId, Name = "User" }
+            );
+            
+        });
         
         modelBuilder.Entity<User>().HasData(users);
     }

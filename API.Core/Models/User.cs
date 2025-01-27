@@ -10,15 +10,7 @@ public class User {
     public  bool IsBanned {get;set;}
     public DateTime CreatedAt {get;set;}
     
-    public ICollection<Role>? Roles {get;set;}
-    public ICollection<Note>? Notes {get;set;}
+    public ICollection<Role>? Roles {get;set;} = new List<Role>();
+    public ICollection<Note>? Notes {get;set;} = new List<Note>();
 
-    // public User(string username,string passwordHash,bool isBanned,DateTime createdAt,List<Role> roles,List<Note> notes){
-    //     Username = username;
-    //     PasswordHash = passwordHash;
-    //     IsBanned = isBanned;
-    //     CreatedAt = createdAt;
-    //     Roles = roles;
-    //     Notes = notes; 
-    // }
 }

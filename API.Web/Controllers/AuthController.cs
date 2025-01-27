@@ -21,13 +21,7 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        try{
-            await _authService.Register(userRequest);        
-        }
-        catch(Exception ex){
-            return StatusCode(500,"Internal server error");
-        }
-
+        await _authService.Register(userRequest);        
         return Ok();
     }
 
@@ -38,13 +32,13 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        try{
-            await _authService.Login(userRequest);        
-        }
-        catch(Exception ex){
-            return StatusCode(500,"Internal server error");
+        var token = await _authService.Login(userRequest);
+
+        if(token != null){
+        Response.Cookies.Append("JwtCookie",token); 
+        return Ok();
         }
 
-        return Ok();
+        return StatusCode(500,"Authentication error");
     }
 }

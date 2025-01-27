@@ -1,24 +1,41 @@
 using API.Application.DTOs;
 using API.Application.Mapper;
 using API.Core.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 
 public class AuthService : IAuthService
 {
     public IUnitOfWork UnitOfWork {get;}
 
-    public AuthService(IUnitOfWork unitOfWork){
+    public IJwtProvider JwtProvider {get;}
+    public AuthService(IUnitOfWork unitOfWork, IJwtProvider jwtProvider){
         UnitOfWork = unitOfWork;
+        JwtProvider = jwtProvider; 
     }
-    public Task Login(LoginUserRequest userRequest)
+    public async Task<string?> Login(LoginUserRequest userRequest)
     {
-        throw new NotImplementedException();
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username);
+        if(user != null){
+
+            var passwordCheck = new PasswordHasher<User>().VerifyHashedPassword(user,user.PasswordHash,userRequest.password); 
+            if(passwordCheck == PasswordVerificationResult.Success){
+
+                var token = JwtProvider.GenerateToken(user);
+                return token;
+            }    
+        }
+        return null;
     }
 
     public async Task Register(RegisterUserRequest userRequest)
     {
         var user = userRequest.ToUser();
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user,user.PasswordHash);
+
+        var userRole =  await UnitOfWork.RoleRepository.GetByFilter(p => p.Name == "User");
+        user.Roles.Add(userRole);
+
         await UnitOfWork.UserRepository.Insert(user);
         await UnitOfWork.SaveAsync();
     }

@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using API.Core.Models;
 
-public class JwtProvider(IOptions<JwtOptions> options)
+public class JwtProvider(IOptions<JwtOptions> options) :IJwtProvider
 {
     public string GenerateToken(User user)
     {   
