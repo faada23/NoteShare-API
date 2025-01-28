@@ -15,18 +15,31 @@ public class UserService : IUserService
         UnitOfWork = unitOfWork;
     }
 
-    public Task<User> GetMe(Guid id)
-    {
-        throw new NotImplementedException();
+    public async Task<GetUserRequest> GetUser(Guid id)
+    {   
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+        return user.ToGetUserRequest();
     }
 
-    public Task UpdateUsername()
+    public async Task UpdateUsername(Guid id,string newName)
     {
-        throw new NotImplementedException();
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+        user.Username = newName;
+        await UnitOfWork.UserRepository.Update(user);
+        await UnitOfWork.SaveAsync();
     }
 
-    public Task UpdatePassword()
+    public async Task UpdatePassword(Guid id,string newPassword)
     {
-        throw new NotImplementedException();
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+        user.PasswordHash = new PasswordHasher<User>().HashPassword(user, newPassword);
+        await UnitOfWork.UserRepository.Update(user); 
+        await UnitOfWork.SaveAsync();
+    }
+
+    public async Task DeleteUser(Guid id){
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+        await UnitOfWork.UserRepository.Delete(id);
+        await UnitOfWork.SaveAsync();
     }
 }

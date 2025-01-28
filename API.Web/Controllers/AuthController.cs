@@ -1,8 +1,10 @@
 using API.Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("[controller]")]
+[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private IUnitOfWork _unitOfWork {get;}

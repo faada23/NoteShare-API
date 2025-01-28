@@ -15,7 +15,7 @@ public class AuthService : IAuthService
     }
     public async Task<string?> Login(LoginUserRequest userRequest)
     {
-        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username);
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username,"Roles");
         if(user != null){
 
             var passwordCheck = new PasswordHasher<User>().VerifyHashedPassword(user,user.PasswordHash,userRequest.password); 

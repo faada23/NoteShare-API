@@ -16,9 +16,12 @@ public static class Mapper {
         };
     }
 
-    public static User ToUser(this LoginUserRequest userRequest){
-        return new User{
-           //todo
-        };
+    public static GetUserRequest ToGetUserRequest(this User user){
+        return new GetUserRequest(
+           user.Id,
+           user.Username,
+           user.IsBanned,
+           user.CreatedAt
+        );
     }
 }

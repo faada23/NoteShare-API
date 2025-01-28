@@ -4,7 +4,9 @@ using API.Core.Models;
 public interface IUserService {
 
     public IUnitOfWork UnitOfWork {get;}
-    Task<User> GetMe(Guid id);
-    Task UpdateUsername();
-    Task UpdatePassword();
+    Task<GetUserRequest> GetUser(Guid id);
+    Task UpdateUsername(Guid id, string newUsername);
+    Task UpdatePassword(Guid id, string newPassword);
+
+    Task DeleteUser(Guid id);
 }
