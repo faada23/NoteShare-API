@@ -1,4 +1,6 @@
-public record GetUserRequest
+namespace API.Application.DTOs;
+
+public record GetUserResponse
 (
     Guid Id,
     string Username,

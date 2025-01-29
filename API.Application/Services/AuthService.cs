@@ -13,12 +13,12 @@ public class AuthService : IAuthService
         UnitOfWork = unitOfWork;
         JwtProvider = jwtProvider; 
     }
-    public async Task<string?> Login(LoginUserRequest userRequest)
+    public async Task<string?> Login(AuthUserDTO userRequest)
     {
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username,"Roles");
         if(user != null){
 
-            var passwordCheck = new PasswordHasher<User>().VerifyHashedPassword(user,user.PasswordHash,userRequest.password); 
+            var passwordCheck = new PasswordHasher<User>().VerifyHashedPassword(user,user.PasswordHash,userRequest.Password); 
             if(passwordCheck == PasswordVerificationResult.Success){
 
                 var token = JwtProvider.GenerateToken(user);
@@ -28,7 +28,7 @@ public class AuthService : IAuthService
         return null;
     }
 
-    public async Task Register(RegisterUserRequest userRequest)
+    public async Task Register(AuthUserDTO userRequest)
     {
         var user = userRequest.ToUser();
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user,user.PasswordHash);

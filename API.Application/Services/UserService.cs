@@ -15,10 +15,10 @@ public class UserService : IUserService
         UnitOfWork = unitOfWork;
     }
 
-    public async Task<GetUserRequest> GetUser(Guid id)
+    public async Task<GetUserResponse> GetUser(Guid id)
     {   
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
-        return user.ToGetUserRequest();
+        return user.ToGetUserResponse();
     }
 
     public async Task UpdateUsername(Guid id,string newName)

@@ -1,30 +1,40 @@
+using API.Application.DTOs;
+using API.Application.Mapper;
 using API.Core.Models;
 
 public class NoteService : INoteService
 {
-    public IUnitOfWork unitOfWork => throw new NotImplementedException();
+    public IUnitOfWork UnitOfWork {get;}
 
-    public Task CreateNote()
+    public NoteService(IUnitOfWork unitOfWork){
+
+        UnitOfWork = unitOfWork;
+    }
+
+    public async Task CreateUserNote(CreateNoteRequest noteRequest, Guid userId)
+    {
+        var note = noteRequest.ToNote(userId);
+        await UnitOfWork.NoteRepository.Insert(note);
+        await UnitOfWork.SaveAsync();
+    }
+
+    public Task DeleteUserNote(Guid id, Guid userId)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteNote()
+    public Task<GetNoteResponse> GetUserNote(Guid id, Guid userId)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Note> GetNote(Guid id)
+    public async Task<IEnumerable<GetNoteResponse>> GetUserNotes(Guid userId)
     {
-        throw new NotImplementedException();
+        var notes = await UnitOfWork.NoteRepository.GetAll();
+        return notes.Where(p=> p.UserId == userId).Select(a => a.ToGetNoteResponse());
     }
 
-    public Task<IEnumerable<Note>> GetNotes()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task UpdateNote()
+    public Task UpdateUserNote(Guid id, Guid userId)
     {
         throw new NotImplementedException();
     }

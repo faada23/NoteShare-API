@@ -12,22 +12,18 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 [Authorize(Roles = "User")]
 public class UserController : ControllerBase
 {   
-    private readonly ILogger<UserController> _logger;
     private readonly IUserService _userService;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public UserController(ILogger<UserController> logger, IUnitOfWork unitOfWork,IUserService userService)
+    public UserController(IUserService userService)
     {
-        _logger = logger;
-        _unitOfWork = unitOfWork;
         _userService = userService;
     }
 
     [HttpGet()]
-    public async Task<ActionResult<GetUserRequest>> GetCurrentUser(){
+    public async Task<ActionResult<GetUserResponse>> GetCurrentUser(){
 
-        string userId = User.FindFirstValue("Id");
-        var userGuid = Guid.Parse(userId);
+        var userGuid = GetCurrentUserId();
+
         var userRequest = await _userService.GetUser(userGuid);
         return Ok(userRequest);
     }
@@ -35,27 +31,25 @@ public class UserController : ControllerBase
     [HttpPut("Password")]
     public async Task<ActionResult> UpdatePassword(string newPassword){
 
-        string userId = User.FindFirstValue("Id");
-        var userGuid = Guid.Parse(userId);
+        var userGuid = GetCurrentUserId();
 
         await _userService.UpdatePassword(userGuid,newPassword);
 
-        return await Logout();
+        return Logout();
     }
 
     [HttpPut("Username")]
     public async Task<ActionResult> UpdateUsername(string newName){
 
-        string userId = User.FindFirstValue("Id");
-        var userGuid = Guid.Parse(userId);
+        var userGuid = GetCurrentUserId();
 
         await _userService.UpdateUsername(userGuid,newName);
 
-        return await Logout();
+        return Logout();
     }
 
     [HttpPost("Logout")]
-    public async Task<ActionResult> Logout(){
+    public ActionResult Logout(){
         Response.Cookies.Delete("JwtCookie");
         return Ok();
     }
@@ -63,11 +57,19 @@ public class UserController : ControllerBase
     [HttpDelete()]
     public async Task<ActionResult> DeleteCurrentUser(){
 
-        string userId = User.FindFirstValue("Id");
-        var userGuid = Guid.Parse(userId);
+        var userGuid = GetCurrentUserId();
 
         await _userService.DeleteUser(userGuid);
+        return Logout();
+    
+    }
 
-        return await Logout();
+    //helper method
+    private Guid GetCurrentUserId()
+    {
+        var userId = User.FindFirstValue("Id");
+        if (!Guid.TryParse(userId, out var userGuid))
+            throw new InvalidDataException();
+        return userGuid;
     }
 }
