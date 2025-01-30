@@ -11,6 +11,7 @@ builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IAuthService,AuthService>();
 builder.Services.AddScoped<INoteService,NoteService>();
+builder.Services.AddScoped<ISharedService,SharedService>();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWTOptions"));
 builder.Services.AddScoped<IJwtProvider,JwtProvider>();
 builder.Services.AddAuth(builder.Configuration);

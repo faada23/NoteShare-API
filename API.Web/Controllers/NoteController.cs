@@ -29,15 +29,20 @@ public class NoteController : ControllerBase{
     }
 
     [HttpDelete]
-    public async Task<ActionResult> DeleteNote()
+    public async Task<ActionResult> DeleteNote(Guid id)
     {
-        throw new NotImplementedException();
+        var userId = GetCurrentUserId();
+        await _noteService.DeleteUserNote(id,userId);
+        return Ok();
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GetNoteResponse>> GetNote()
+    public async Task<ActionResult<GetNoteResponse>> GetNote(Guid id)
     {
-        throw new NotImplementedException();
+        var userId = GetCurrentUserId();
+        var note = await _noteService.GetUserNote(id,userId);
+        if(note != null) return Ok(note);
+        else return NotFound();
     }
 
     [HttpGet]
@@ -49,9 +54,18 @@ public class NoteController : ControllerBase{
     }
 
     [HttpPut]
-    public async Task UpdateNote()
+    public async Task<ActionResult> UpdateNote([FromBody] UpdateNoteRequest noteRequest)
     {
-        throw new NotImplementedException();
+        var userId = GetCurrentUserId();
+        await _noteService.UpdateUserNote(noteRequest,userId);
+        return Ok();
+    }
+
+    [HttpPut("{id}/Visibility")]
+    public async Task<ActionResult> PublishNote(Guid id){
+        var userId = GetCurrentUserId();
+        await _noteService.NoteVisibility(id,userId);
+        return Ok();
     }
 
     //helper method

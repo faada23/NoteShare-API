@@ -47,4 +47,10 @@ public static class Mapper {
             UserId = userId
         };
     }
+
+    public static void Update(this Note note, UpdateNoteRequest noteRequest){
+        note.Title = noteRequest.Title;
+        note.Content = noteRequest.content;
+        note.UpdatedAt = DateTime.UtcNow;
+    }
 }

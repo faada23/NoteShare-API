@@ -1,6 +1,7 @@
 using API.Application.DTOs;
 using API.Application.Mapper;
 using API.Core.Models;
+using Microsoft.AspNetCore.Http;
 
 public class NoteService : INoteService
 {
@@ -18,14 +19,19 @@ public class NoteService : INoteService
         await UnitOfWork.SaveAsync();
     }
 
-    public Task DeleteUserNote(Guid id, Guid userId)
-    {
-        throw new NotImplementedException();
+    public async Task DeleteUserNote(Guid id, Guid userId)
+    {   
+        var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
+        if(note.UserId == userId) await UnitOfWork.NoteRepository.Delete(id);
+        await UnitOfWork.SaveAsync();
     }
 
-    public Task<GetNoteResponse> GetUserNote(Guid id, Guid userId)
+    public async Task<GetNoteResponse> GetUserNote(Guid id, Guid userId)
     {
-        throw new NotImplementedException();
+        var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
+        if(note.UserId != userId) return null;
+        else return note.ToGetNoteResponse();
+         
     }
 
     public async Task<IEnumerable<GetNoteResponse>> GetUserNotes(Guid userId)
@@ -34,8 +40,23 @@ public class NoteService : INoteService
         return notes.Where(p=> p.UserId == userId).Select(a => a.ToGetNoteResponse());
     }
 
-    public Task UpdateUserNote(Guid id, Guid userId)
+    public async Task UpdateUserNote(UpdateNoteRequest noteRequest,Guid userId)
     {
-        throw new NotImplementedException();
+        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == noteRequest.id);
+        if(note.UserId == userId){
+            note.Update(noteRequest);
+            await UnitOfWork.NoteRepository.Update(note);
+            await UnitOfWork.SaveAsync();
+        }
+    }
+
+    public async Task NoteVisibility(Guid id,Guid userId){
+        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == id);
+        if(note.UserId == userId)
+        {
+            note.IsPublic = !note.IsPublic;
+            await UnitOfWork.NoteRepository.Update(note);
+            await UnitOfWork.SaveAsync();
+        }
     }
 }
