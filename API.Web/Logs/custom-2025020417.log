@@ -1,0 +1,15 @@
+2025-02-04 17:14:22.341 +03:00 [INF] Executed DbCommand (50ms) [Parameters=[@__userRequest_Username_0='Testik'], CommandType='"Text"', CommandTimeout='30']
+SELECT u0."Id", u0."CreatedAt", u0."IsBanned", u0."PasswordHash", u0."Username", s."RolesId", s."usersId", s."Id", s."Name"
+FROM (
+    SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+    FROM "Users" AS u
+    WHERE u."Username" = @__userRequest_Username_0
+    LIMIT 1
+) AS u0
+LEFT JOIN (
+    SELECT r."RolesId", r."usersId", r0."Id", r0."Name"
+    FROM "RoleUser" AS r
+    INNER JOIN "Roles" AS r0 ON r."RolesId" = r0."Id"
+) AS s ON u0."Id" = s."usersId"
+ORDER BY u0."Id", s."RolesId", s."usersId"
+2025-02-04 17:14:22.523 +03:00 [INF] login end

@@ -1,5 +1,7 @@
 public interface IModeratorService {
-    public IUnitOfWork unitOfWork{get;}
+    public IUnitOfWork UnitOfWork{get;}
 
-    public void BanUser(); 
+    public Task BanUser(BanUserRequest banUserRequest);
+    public Task DeletePublicNote(Guid id);
+    public Task GetLogs();
 }

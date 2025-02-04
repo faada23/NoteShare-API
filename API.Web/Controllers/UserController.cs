@@ -29,21 +29,21 @@ public class UserController : ControllerBase
     }
 
     [HttpPut("Password")]
-    public async Task<ActionResult> UpdatePassword(string newPassword){
+    public async Task<ActionResult> UpdatePassword([FromBody] PasswordUpdateRequest updateRequest){
 
         var userGuid = GetCurrentUserId();
 
-        await _userService.UpdatePassword(userGuid,newPassword);
+        await _userService.UpdatePassword(userGuid,updateRequest.newPassword);
 
         return Logout();
     }
 
     [HttpPut("Username")]
-    public async Task<ActionResult> UpdateUsername(string newName){
+    public async Task<ActionResult> UpdateUsername([FromBody] UsernameUpdateRequest updateRequest){
 
         var userGuid = GetCurrentUserId();
 
-        await _userService.UpdateUsername(userGuid,newName);
+        await _userService.UpdateUsername(userGuid,updateRequest.newUsername);
 
         return Logout();
     }

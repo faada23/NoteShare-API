@@ -1,6 +1,6 @@
 namespace API.Application.DTOs;
 
-public record AuthUserDTO
+public record LoginRequest
 (
     string Username,
     string Password

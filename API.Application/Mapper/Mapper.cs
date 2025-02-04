@@ -5,7 +5,7 @@ using API.Core.Models;
 namespace API.Application.Mapper;
 public static class Mapper {
 
-    public static User ToUser(this AuthUserDTO userRequest)
+    public static User ToUser(this RegisterRequest userRequest)
     {
         return new User{
             Id = new Guid(),

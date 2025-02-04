@@ -1,0 +1,99 @@
+2025-02-04 15:18:19.369 +03:00 [INF] User profile is available. Using 'C:\Users\User\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-02-04 15:18:19.436 +03:00 [WRN] The WebRootPath was not found: D:\programmes\vs code projects\ASP.NET Core MVC NoteShare API\API.Web\wwwroot. Static files may be unavailable.
+2025-02-04 15:18:19.447 +03:00 [INF] Now listening on: http://localhost:5252
+2025-02-04 15:18:19.449 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-04 15:18:19.449 +03:00 [INF] Hosting environment: Development
+2025-02-04 15:18:19.449 +03:00 [INF] Content root path: D:\programmes\vs code projects\ASP.NET Core MVC NoteShare API\API.Web
+2025-02-04 15:18:19.640 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/index.html - null null
+2025-02-04 15:18:19.649 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-02-04 15:18:19.785 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 136.6606 ms
+2025-02-04 15:18:19.789 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/index.html - 200 null text/html;charset=utf-8 151.0741ms
+2025-02-04 15:18:19.856 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/index.js - null null
+2025-02-04 15:18:19.863 +03:00 [INF] HTTP GET /swagger/index.js responded 200 in 5.9710 ms
+2025-02-04 15:18:19.863 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/index.js - 200 null application/javascript;charset=utf-8 7.2656ms
+2025-02-04 15:18:20.394 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/v1/swagger.json - null null
+2025-02-04 15:18:20.547 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 152.3274 ms
+2025-02-04 15:18:20.547 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 152.9204ms
+2025-02-04 15:18:36.971 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5252/Auth/Login - application/json 50
+2025-02-04 15:18:36.976 +03:00 [INF] Executing endpoint 'AuthController.Login (API.Web)'
+2025-02-04 15:18:37.000 +03:00 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] Login(API.Application.DTOs.LoginRequest) on controller AuthController (API.Web).
+2025-02-04 15:18:37.497 +03:00 [WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-02-04 15:18:38.552 +03:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2025-02-04 15:18:38.554 +03:00 [INF] Executed action AuthController.Login (API.Web) in 1550.8178ms
+2025-02-04 15:18:38.554 +03:00 [INF] Executed endpoint 'AuthController.Login (API.Web)'
+2025-02-04 15:18:38.555 +03:00 [INF] HTTP POST /Auth/Login responded 200 in 1583.9645 ms
+2025-02-04 15:18:38.560 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5252/Auth/Login - 200 0 null 1589.6803ms
+2025-02-04 15:19:05.885 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5252/Note - application/json 204
+2025-02-04 15:19:05.914 +03:00 [INF] Executing endpoint 'NoteController.CreateNote (API.Web)'
+2025-02-04 15:19:05.920 +03:00 [INF] Route matched with {action = "CreateNote", controller = "Note"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] CreateNote(CreateNoteRequest) on controller NoteController (API.Web).
+2025-02-04 15:19:05.987 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__userId_0='0194b1e7-7d1f-7d33-a717-f820b9039952'], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+FROM "Users" AS u
+WHERE u."Id" = @__userId_0
+LIMIT 1
+2025-02-04 15:19:06.100 +03:00 [INF] Executed DbCommand (7ms) [Parameters=[@p0='0194d0e6-5e97-7c73-b550-1c7762a70e52', @p1='string' (Nullable = false), @p2='2025-02-04T12:19:05.9784639Z' (DbType = DateTime), @p3='True', @p4='stringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstring' (Nullable = false), @p5='2025-02-04T12:19:05.9784839Z' (DbType = DateTime), @p6='0194b1e7-7d1f-7d33-a717-f820b9039952'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Notes" ("Id", "Content", "CreatedAt", "IsPublic", "Title", "UpdatedAt", "UserId")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+2025-02-04 15:19:06.106 +03:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2025-02-04 15:19:06.106 +03:00 [INF] Executed action NoteController.CreateNote (API.Web) in 185.7781ms
+2025-02-04 15:19:06.106 +03:00 [INF] Executed endpoint 'NoteController.CreateNote (API.Web)'
+2025-02-04 15:19:06.106 +03:00 [INF] HTTP POST /Note responded 200 in 221.1395 ms
+2025-02-04 15:19:06.106 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5252/Note - 200 0 null 221.6886ms
+2025-02-04 15:21:37.996 +03:00 [INF] User profile is available. Using 'C:\Users\User\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-02-04 15:21:38.053 +03:00 [WRN] The WebRootPath was not found: D:\programmes\vs code projects\ASP.NET Core MVC NoteShare API\API.Web\wwwroot. Static files may be unavailable.
+2025-02-04 15:21:38.064 +03:00 [INF] Now listening on: http://localhost:5252
+2025-02-04 15:21:38.066 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-04 15:21:38.067 +03:00 [INF] Hosting environment: Development
+2025-02-04 15:21:38.067 +03:00 [INF] Content root path: D:\programmes\vs code projects\ASP.NET Core MVC NoteShare API\API.Web
+2025-02-04 15:21:38.249 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/index.html - null null
+2025-02-04 15:21:38.259 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-02-04 15:21:38.430 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 173.5849 ms
+2025-02-04 15:21:38.433 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/index.html - 200 null text/html;charset=utf-8 187.0532ms
+2025-02-04 15:21:38.484 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/index.js - null null
+2025-02-04 15:21:38.487 +03:00 [INF] HTTP GET /swagger/index.js responded 200 in 3.4616 ms
+2025-02-04 15:21:38.488 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/index.js - 200 null application/javascript;charset=utf-8 4.4172ms
+2025-02-04 15:21:38.852 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/v1/swagger.json - null null
+2025-02-04 15:21:38.968 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 115.8612 ms
+2025-02-04 15:21:38.968 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 116.4094ms
+2025-02-04 15:21:57.761 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5252/Note - application/json 234
+2025-02-04 15:21:57.768 +03:00 [INF] Executing endpoint 'NoteController.CreateNote (API.Web)'
+2025-02-04 15:21:57.786 +03:00 [INF] Route matched with {action = "CreateNote", controller = "Note"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] CreateNote(CreateNoteRequest) on controller NoteController (API.Web).
+2025-02-04 15:21:58.160 +03:00 [WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-02-04 15:21:58.746 +03:00 [INF] Executed DbCommand (32ms) [Parameters=[@__userId_0='0194b1e7-7d1f-7d33-a717-f820b9039952'], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+FROM "Users" AS u
+WHERE u."Id" = @__userId_0
+LIMIT 1
+2025-02-04 15:21:58.907 +03:00 [INF] Executed DbCommand (6ms) [Parameters=[@p0='0194d0e9-01a3-7a96-94a4-da6d78693855', @p1='string' (Nullable = false), @p2='2025-02-04T12:21:58.3104253Z' (DbType = DateTime), @p3='True', @p4='stringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstring' (Nullable = false), @p5='2025-02-04T12:21:58.3104385Z' (DbType = DateTime), @p6='0194b1e7-7d1f-7d33-a717-f820b9039952'], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO "Notes" ("Id", "Content", "CreatedAt", "IsPublic", "Title", "UpdatedAt", "UserId")
+VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6);
+2025-02-04 15:21:58.915 +03:00 [INF] Executing StatusCodeResult, setting HTTP status code 200
+2025-02-04 15:21:58.917 +03:00 [INF] Executed action NoteController.CreateNote (API.Web) in 1129.011ms
+2025-02-04 15:21:58.917 +03:00 [INF] Executed endpoint 'NoteController.CreateNote (API.Web)'
+2025-02-04 15:21:58.918 +03:00 [INF] HTTP POST /Note responded 200 in 1156.8477 ms
+2025-02-04 15:21:58.925 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5252/Note - 200 0 null 1164.4089ms
+2025-02-04 15:26:13.954 +03:00 [INF] User profile is available. Using 'C:\Users\User\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-02-04 15:26:14.008 +03:00 [WRN] The WebRootPath was not found: D:\programmes\vs code projects\ASP.NET Core MVC NoteShare API\API.Web\wwwroot. Static files may be unavailable.
+2025-02-04 15:26:14.018 +03:00 [INF] Now listening on: http://localhost:5252
+2025-02-04 15:26:14.020 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-02-04 15:26:14.020 +03:00 [INF] Hosting environment: Development
+2025-02-04 15:26:14.020 +03:00 [INF] Content root path: D:\programmes\vs code projects\ASP.NET Core MVC NoteShare API\API.Web
+2025-02-04 15:26:14.197 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/index.html - null null
+2025-02-04 15:26:14.202 +03:00 [WRN] Failed to determine the https port for redirect.
+2025-02-04 15:26:14.353 +03:00 [INF] HTTP GET /swagger/index.html responded 200 in 150.0746 ms
+2025-02-04 15:26:14.356 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/index.html - 200 null text/html;charset=utf-8 159.9618ms
+2025-02-04 15:26:14.409 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/index.js - null null
+2025-02-04 15:26:14.412 +03:00 [INF] HTTP GET /swagger/index.js responded 200 in 3.2483 ms
+2025-02-04 15:26:14.414 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/index.js - 200 null application/javascript;charset=utf-8 4.1151ms
+2025-02-04 15:26:14.746 +03:00 [INF] Request starting HTTP/1.1 GET http://localhost:5252/swagger/v1/swagger.json - null null
+2025-02-04 15:26:14.867 +03:00 [INF] HTTP GET /swagger/v1/swagger.json responded 200 in 120.1227 ms
+2025-02-04 15:26:14.867 +03:00 [INF] Request finished HTTP/1.1 GET http://localhost:5252/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 120.8233ms
+2025-02-04 15:26:31.107 +03:00 [INF] Request starting HTTP/1.1 POST http://localhost:5252/Note - application/json 230
+2025-02-04 15:26:31.112 +03:00 [INF] Executing endpoint 'NoteController.CreateNote (API.Web)'
+2025-02-04 15:26:31.134 +03:00 [INF] Route matched with {action = "CreateNote", controller = "Note"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult] CreateNote(CreateNoteRequest) on controller NoteController (API.Web).
+2025-02-04 15:26:31.497 +03:00 [WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-02-04 15:26:31.656 +03:00 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2025-02-04 15:26:31.679 +03:00 [INF] Executed action NoteController.CreateNote (API.Web) in 542.7229ms
+2025-02-04 15:26:31.679 +03:00 [INF] Executed endpoint 'NoteController.CreateNote (API.Web)'
+2025-02-04 15:26:31.679 +03:00 [INF] HTTP POST /Note responded 400 in 571.9811 ms
+2025-02-04 15:26:31.683 +03:00 [INF] Request finished HTTP/1.1 POST http://localhost:5252/Note - 400 null application/problem+json; charset=utf-8 575.8481ms

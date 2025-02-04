@@ -1,10 +1,8 @@
 using System.Security.Claims;
 using API.Application.DTOs;
-using API.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration.UserSecrets;
-using Swashbuckle.AspNetCore.Annotations;
+using Serilog;
 
 [ApiController]
 [Route("[controller]")]
@@ -50,6 +48,7 @@ public class NoteController : ControllerBase{
     {
         var userId = GetCurrentUserId();
         var notes = await _noteService.GetUserNotes(userId);
+        Log.Information("User {userId} invoked GetNotes() => {@notes}",userId,notes);
         return Ok(notes);
     }
 

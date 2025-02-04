@@ -15,8 +15,12 @@ public class NoteService : INoteService
     public async Task CreateUserNote(CreateNoteRequest noteRequest, Guid userId)
     {
         var note = noteRequest.ToNote(userId);
-        await UnitOfWork.NoteRepository.Insert(note);
-        await UnitOfWork.SaveAsync();
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == userId);
+
+        if(user.IsBanned == false || note.IsPublic == false){ 
+            await UnitOfWork.NoteRepository.Insert(note);
+            await UnitOfWork.SaveAsync();
+        }
     }
 
     public async Task DeleteUserNote(Guid id, Guid userId)
@@ -50,9 +54,11 @@ public class NoteService : INoteService
         }
     }
 
-    public async Task NoteVisibility(Guid id,Guid userId){
+    public async Task NoteVisibility(Guid id, Guid userId){
         var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == id);
-        if(note.UserId == userId)
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == userId);
+
+        if(note.UserId == userId && user.IsBanned == false)
         {
             note.IsPublic = !note.IsPublic;
             await UnitOfWork.NoteRepository.Update(note);

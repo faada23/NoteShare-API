@@ -1,0 +1,95 @@
+2025-02-01 16:24:07.110 +03:00 [INF] LOGIN OPERAION STARTED
+2025-02-01 16:24:07.677 +03:00 [INF] Executed DbCommand (41ms) [Parameters=[@__userRequest_Username_0='Testik'], CommandType='"Text"', CommandTimeout='30']
+SELECT u0."Id", u0."CreatedAt", u0."IsBanned", u0."PasswordHash", u0."Username", s."RolesId", s."usersId", s."Id", s."Name"
+FROM (
+    SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+    FROM "Users" AS u
+    WHERE u."Username" = @__userRequest_Username_0
+    LIMIT 1
+) AS u0
+LEFT JOIN (
+    SELECT r."RolesId", r."usersId", r0."Id", r0."Name"
+    FROM "RoleUser" AS r
+    INNER JOIN "Roles" AS r0 ON r."RolesId" = r0."Id"
+) AS s ON u0."Id" = s."usersId"
+ORDER BY u0."Id", s."RolesId", s."usersId"
+2025-02-01 16:26:06.797 +03:00 [INF] LOGIN OPERAION STARTED
+2025-02-01 16:26:06.807 +03:00 [INF] Executed DbCommand (3ms) [Parameters=[@__userRequest_Username_0='Testik'], CommandType='"Text"', CommandTimeout='30']
+SELECT u0."Id", u0."CreatedAt", u0."IsBanned", u0."PasswordHash", u0."Username", s."RolesId", s."usersId", s."Id", s."Name"
+FROM (
+    SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+    FROM "Users" AS u
+    WHERE u."Username" = @__userRequest_Username_0
+    LIMIT 1
+) AS u0
+LEFT JOIN (
+    SELECT r."RolesId", r."usersId", r0."Id", r0."Name"
+    FROM "RoleUser" AS r
+    INNER JOIN "Roles" AS r0 ON r."RolesId" = r0."Id"
+) AS s ON u0."Id" = s."usersId"
+ORDER BY u0."Id", s."RolesId", s."usersId"
+2025-02-01 16:27:38.094 +03:00 [INF] LOGIN OPERAION STARTED
+2025-02-01 16:27:38.492 +03:00 [INF] Executed DbCommand (32ms) [Parameters=[@__userRequest_Username_0='Testik'], CommandType='"Text"', CommandTimeout='30']
+SELECT u0."Id", u0."CreatedAt", u0."IsBanned", u0."PasswordHash", u0."Username", s."RolesId", s."usersId", s."Id", s."Name"
+FROM (
+    SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+    FROM "Users" AS u
+    WHERE u."Username" = @__userRequest_Username_0
+    LIMIT 1
+) AS u0
+LEFT JOIN (
+    SELECT r."RolesId", r."usersId", r0."Id", r0."Name"
+    FROM "RoleUser" AS r
+    INNER JOIN "Roles" AS r0 ON r."RolesId" = r0."Id"
+) AS s ON u0."Id" = s."usersId"
+ORDER BY u0."Id", s."RolesId", s."usersId"
+2025-02-01 16:31:39.733 +03:00 [INF] login start
+2025-02-01 16:31:40.303 +03:00 [INF] Executed DbCommand (36ms) [Parameters=[@__userRequest_Username_0='Testik'], CommandType='"Text"', CommandTimeout='30']
+SELECT u0."Id", u0."CreatedAt", u0."IsBanned", u0."PasswordHash", u0."Username", s."RolesId", s."usersId", s."Id", s."Name"
+FROM (
+    SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+    FROM "Users" AS u
+    WHERE u."Username" = @__userRequest_Username_0
+    LIMIT 1
+) AS u0
+LEFT JOIN (
+    SELECT r."RolesId", r."usersId", r0."Id", r0."Name"
+    FROM "RoleUser" AS r
+    INNER JOIN "Roles" AS r0 ON r."RolesId" = r0."Id"
+) AS s ON u0."Id" = s."usersId"
+ORDER BY u0."Id", s."RolesId", s."usersId"
+2025-02-01 16:31:40.488 +03:00 [INF] login end
+2025-02-01 16:31:58.638 +03:00 [INF] login start
+2025-02-01 16:31:58.643 +03:00 [INF] Executed DbCommand (2ms) [Parameters=[@__userRequest_Username_0='Testiks'], CommandType='"Text"', CommandTimeout='30']
+SELECT u0."Id", u0."CreatedAt", u0."IsBanned", u0."PasswordHash", u0."Username", s."RolesId", s."usersId", s."Id", s."Name"
+FROM (
+    SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+    FROM "Users" AS u
+    WHERE u."Username" = @__userRequest_Username_0
+    LIMIT 1
+) AS u0
+LEFT JOIN (
+    SELECT r."RolesId", r."usersId", r0."Id", r0."Name"
+    FROM "RoleUser" AS r
+    INNER JOIN "Roles" AS r0 ON r."RolesId" = r0."Id"
+) AS s ON u0."Id" = s."usersId"
+ORDER BY u0."Id", s."RolesId", s."usersId"
+2025-02-01 16:31:58.644 +03:00 [ERR] name entered by user was not found
+2025-02-01 16:31:58.644 +03:00 [INF] login end
+2025-02-01 16:32:02.521 +03:00 [INF] login start
+2025-02-01 16:32:02.523 +03:00 [INF] Executed DbCommand (1ms) [Parameters=[@__userRequest_Username_0='Testik'], CommandType='"Text"', CommandTimeout='30']
+SELECT u0."Id", u0."CreatedAt", u0."IsBanned", u0."PasswordHash", u0."Username", s."RolesId", s."usersId", s."Id", s."Name"
+FROM (
+    SELECT u."Id", u."CreatedAt", u."IsBanned", u."PasswordHash", u."Username"
+    FROM "Users" AS u
+    WHERE u."Username" = @__userRequest_Username_0
+    LIMIT 1
+) AS u0
+LEFT JOIN (
+    SELECT r."RolesId", r."usersId", r0."Id", r0."Name"
+    FROM "RoleUser" AS r
+    INNER JOIN "Roles" AS r0 ON r."RolesId" = r0."Id"
+) AS s ON u0."Id" = s."usersId"
+ORDER BY u0."Id", s."RolesId", s."usersId"
+2025-02-01 16:32:02.586 +03:00 [ERR] user entered wrong password
+2025-02-01 16:32:02.586 +03:00 [INF] login end
