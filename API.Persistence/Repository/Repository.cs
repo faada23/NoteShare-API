@@ -11,28 +11,31 @@ public class Repository<T> : IRepository<T> where T : class
         dbSet = _db.Set<T>();
     }
 
-    public async Task Insert(T entity)
+    public void Insert(T entity)
     {
-        await dbSet.AddAsync(entity);
+        dbSet.Add(entity);
     }
 
-    public Task Delete(T entity)
+    public void Delete(T entity)
     {
         if (dbSet.Entry(entity).State == EntityState.Detached)
             {
                 dbSet.Attach(entity);
             }
             dbSet.Remove(entity);
-
-        return Task.CompletedTask;
     }
 
-    public Task Delete(Guid id)
-    {
-        T entity = dbSet.Find(id);
-        dbSet.Remove(entity);
+    public bool Delete(Guid id)
+    {   
+        T? entity = dbSet.Find(id);
 
-        return Task.CompletedTask;
+        if(entity != null){
+
+            dbSet.Remove(entity);
+            return true;
+        }
+
+        return false;
     }
 
     public async Task<IEnumerable<T>> GetAll(string? includeProperties = null)
@@ -62,10 +65,9 @@ public class Repository<T> : IRepository<T> where T : class
     }
 
 
-    public Task Update(T entity)
+    public void Update(T entity)
     {
         dbSet.Update(entity);
-        return Task.CompletedTask;
     }
     
 }

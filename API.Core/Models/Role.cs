@@ -1,11 +1,19 @@
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-
 namespace API.Core.Models;
 public class Role{
     public Guid Id {get;set;}
-    [Required]
     public string Name {get;set;} = null!;
-    [JsonIgnore]
-    public ICollection<User>? users {get;set;} = new List<User>();
+    public ICollection<User> users {get;set;} = new List<User>();
+
+    public Role(Guid id, string name){
+        if(id.Equals(Guid.Empty)){
+            throw new Exception("Wrong id format");
+        }
+
+        if(name == null || name.Equals(string.Empty)){
+            throw new Exception("Name can't be null");
+        }
+
+        Id =id;
+        Name = name;
+    }
 }

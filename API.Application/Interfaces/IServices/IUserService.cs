@@ -5,8 +5,8 @@ public interface IUserService {
 
     public IUnitOfWork UnitOfWork {get;}
     Task<GetUserResponse> GetUser(Guid id);
-    Task UpdateUsername(Guid id, string newUsername);
-    Task UpdatePassword(Guid id, string newPassword);
+    Task<bool> UpdateUsername(Guid id, string newUsername);
+    Task<bool> UpdatePassword(Guid id, string newPassword);
 
-    Task DeleteUser(Guid id);
+    Task<bool> DeleteUser(Guid id);
 }

@@ -1,5 +1,6 @@
 using API.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -19,8 +20,12 @@ public class AuthController : ControllerBase
     [HttpPost("Register")]
     public async Task<ActionResult> Register([FromBody] RegisterRequest userRequest){
 
-        await _authService.Register(userRequest);        
-        return Ok();
+        var result = await _authService.Register(userRequest);
+        if(result){
+
+            return Ok();
+        }        
+        return BadRequest("Wrong Registration Data");
     }
 
     [HttpPost("Login")]
@@ -28,12 +33,13 @@ public class AuthController : ControllerBase
         
         var token = await _authService.Login(userRequest);
 
-        if(token != null){
-        Response.Cookies.Append("JwtCookie",token); 
-        return Ok();
+        if(token != null)
+        {
+            Response.Cookies.Append("JwtCookie",token); 
+            return Ok();
         }
 
-        return StatusCode(500,"Authentication error");
+        return StatusCode(500,"Wrong authentication data");
     }
 
 }

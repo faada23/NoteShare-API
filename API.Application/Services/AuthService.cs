@@ -20,39 +20,43 @@ public class AuthService : IAuthService
         JwtProvider = jwtProvider;
     }
     public async Task<string?> Login(LoginRequest userRequest)
-    {   using (LogContext.PushProperty("LogType", "Custom"))
-        {
-            
-            var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username,"Roles");
-            if(user != null){
+    {       
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username,"Roles");
 
-                
-                var passwordCheck = new PasswordHasher<User>().VerifyHashedPassword(user,user.PasswordHash,userRequest.Password); 
-                if(passwordCheck == PasswordVerificationResult.Success){
+        if(user != null){
 
-                    var token = JwtProvider.GenerateToken(user);
-                    Log.Information("login end"); 
-                    return token;
-                    
-                }
+            var passwordCheck = new PasswordHasher<User>().VerifyHashedPassword(user,user.PasswordHash,userRequest.Password); 
+            if(passwordCheck == PasswordVerificationResult.Success){
+
+                var token = JwtProvider.GenerateToken(user);
+                return token; 
             }
         }
+
         return null;
     }
 
-    public async Task Register(RegisterRequest userRequest)
+    public async Task<bool> Register(RegisterRequest userRequest)
     {
         var user = userRequest.ToUser();
+
+        if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == user.Username) != null ){
+            return false;
+        }
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user,user.PasswordHash);
 
-        var roles =  await UnitOfWork.RoleRepository.GetAll();
-        var userRole = roles.FirstOrDefault(p => p.Name == "User");
-        var moderatorRole = roles.FirstOrDefault(p => p.Name == "Moderator");
+        var userRole = await UnitOfWork.RoleRepository.GetByFilter(p=> p.Name == "User");
+        var moderatorRole = await UnitOfWork.RoleRepository.GetByFilter(p => p.Name == "Moderator");
+
+        if(userRole == null || moderatorRole == null ){
+            throw new Exception("Default Roles are missing");
+        }
 
         if(userRequest.ModeratorCode == "12345") user.Roles.Add(moderatorRole);
         user.Roles.Add(userRole);
 
-        await UnitOfWork.UserRepository.Insert(user);
+        UnitOfWork.UserRepository.Insert(user);
         await UnitOfWork.SaveAsync();
+        return true;
     }
 }

@@ -16,7 +16,7 @@ public class SharedService : ISharedService
         var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
 
         if(note.IsPublic == true ) return note.ToGetNoteResponse();
-        else return null;
+        return null;
     }
 
     public async Task<IEnumerable<GetNoteResponse>> GetSharedNotes()

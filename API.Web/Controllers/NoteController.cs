@@ -22,16 +22,24 @@ public class NoteController : ControllerBase{
     public async Task<ActionResult> CreateNote([FromBody] CreateNoteRequest noteRequest)
     {   
         var userId = GetCurrentUserId();
-        await _noteService.CreateUserNote(noteRequest,userId);
-        return Ok();
+        var result = await _noteService.CreateUserNote(noteRequest,userId);
+        if(result){
+            
+            return Ok();
+        }
+        return BadRequest("User baned from creating public notes");
     }
 
     [HttpDelete]
     public async Task<ActionResult> DeleteNote(Guid id)
     {
         var userId = GetCurrentUserId();
-        await _noteService.DeleteUserNote(id,userId);
-        return Ok();
+        var result = await _noteService.DeleteUserNote(id,userId);
+        if(result){
+            
+            return Ok();
+        }
+        return BadRequest("Delete Error");
     }
 
     [HttpGet("{id}")]
@@ -48,7 +56,6 @@ public class NoteController : ControllerBase{
     {
         var userId = GetCurrentUserId();
         var notes = await _noteService.GetUserNotes(userId);
-        Log.Information("User {userId} invoked GetNotes() => {@notes}",userId,notes);
         return Ok(notes);
     }
 
@@ -56,15 +63,23 @@ public class NoteController : ControllerBase{
     public async Task<ActionResult> UpdateNote([FromBody] UpdateNoteRequest noteRequest)
     {
         var userId = GetCurrentUserId();
-        await _noteService.UpdateUserNote(noteRequest,userId);
-        return Ok();
+        var result = await _noteService.UpdateUserNote(noteRequest,userId);
+        if(result){
+            
+            return Ok();
+        }
+        return BadRequest("Update error");
     }
 
     [HttpPut("{id}/Visibility")]
     public async Task<ActionResult> PublishNote(Guid id){
         var userId = GetCurrentUserId();
-        await _noteService.NoteVisibility(id,userId);
-        return Ok();
+        var result = await _noteService.NoteVisibility(id,userId);
+        if(result){
+            
+            return Ok();
+        }
+        return BadRequest("User baned from sharing notes");
     }
 
     //helper method

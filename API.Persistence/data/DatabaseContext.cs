@@ -33,42 +33,36 @@ public class DatabaseContext : DbContext
         var users = new[]
         {
             new User
-            {
-                Id = adminId,
-                Username = "admin",
-                PasswordHash = "admin123",
-                IsBanned = false,
-                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                Roles = new List<Role>(),
-                Notes = new List<Note>()
-            },
+            (
+                adminId,
+                "admin",
+                "admin123",
+                false,
+                new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            ),
             new User
-            {
-                Id = userId,
-                Username = "user",
-                PasswordHash = "user123",
-                IsBanned = false,
-                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                Roles = new List<Role>(),
-                Notes = new List<Note>()
-            },
+            (
+                userId,
+                "user",
+                "user123",
+                false,
+                new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            ),
             new User
-            {
-                Id = guestId,
-                Username = "guest",
-                PasswordHash = "guest123",
-                IsBanned = true,
-                CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                Roles = new List<Role>(),
-                Notes = new List<Note>()
-            }
+            (
+                guestId,
+                "guest",
+                "guest123",
+                true,
+                new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+            )
         };
 
         modelBuilder.Entity<Role>(b =>
         {
             b.HasData(
-                new Role { Id = moderatorRoleId, Name = "Moderator" },  
-                new Role { Id = userRoleId, Name = "User" }
+                new Role (moderatorRoleId, "Moderator" ),  
+                new Role (userRoleId, "User" )
             );
             
         });

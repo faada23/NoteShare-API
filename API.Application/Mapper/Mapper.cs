@@ -7,12 +7,13 @@ public static class Mapper {
 
     public static User ToUser(this RegisterRequest userRequest)
     {
-        return new User{
-            Id = new Guid(),
-            Username = userRequest.Username,
-            PasswordHash = userRequest.Password,
-            CreatedAt = DateTime.UtcNow,       
-        };
+        return new User(
+            new Guid(),
+            userRequest.Username,
+            userRequest.Password,
+            false,
+            DateTime.UtcNow
+            );
     }
 
     public static GetUserResponse ToGetUserResponse(this User user){
@@ -37,15 +38,16 @@ public static class Mapper {
     }
 
     public static Note ToNote(this CreateNoteRequest noteRequest,Guid userId){
-        return new Note{
-            Id = new Guid(),
-            Title = noteRequest.Title,
-            Content = noteRequest.Content,
-            IsPublic = noteRequest.isPublic,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            UserId = userId
-        };
+        var now = DateTime.UtcNow;
+        return new Note(
+            new Guid(),
+            noteRequest.Title,
+            noteRequest.Content,
+            noteRequest.isPublic,
+            now,
+            now,
+            userId
+        );
     }
 
     public static void Update(this Note note, UpdateNoteRequest noteRequest){

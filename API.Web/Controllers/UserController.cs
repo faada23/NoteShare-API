@@ -25,6 +25,7 @@ public class UserController : ControllerBase
         var userGuid = GetCurrentUserId();
 
         var userRequest = await _userService.GetUser(userGuid);
+
         return Ok(userRequest);
     }
 
@@ -33,9 +34,12 @@ public class UserController : ControllerBase
 
         var userGuid = GetCurrentUserId();
 
-        await _userService.UpdatePassword(userGuid,updateRequest.newPassword);
-
-        return Logout();
+        var result = await _userService.UpdatePassword(userGuid,updateRequest.newPassword);
+        if(result){
+            
+            return Logout();
+        }
+        return BadRequest("Update Error");
     }
 
     [HttpPut("Username")]
@@ -43,9 +47,13 @@ public class UserController : ControllerBase
 
         var userGuid = GetCurrentUserId();
 
-        await _userService.UpdateUsername(userGuid,updateRequest.newUsername);
+        var result = await _userService.UpdateUsername(userGuid,updateRequest.newUsername);
+        if(result){
+            
+            return Logout();
+        }
 
-        return Logout();
+        return BadRequest("This username is taken");
     }
 
     [HttpPost("Logout")]
@@ -59,8 +67,12 @@ public class UserController : ControllerBase
 
         var userGuid = GetCurrentUserId();
 
-        await _userService.DeleteUser(userGuid);
-        return Logout();
+        var result = await _userService.DeleteUser(userGuid);
+        if(result){
+            
+            return Logout();
+        }
+        return NotFound();
     
     }
 
