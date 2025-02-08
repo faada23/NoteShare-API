@@ -11,9 +11,12 @@ public class SharedService : ISharedService
         UnitOfWork = unitOfWork;
     }
 
-    public async Task<GetNoteResponse> GetSharedNote(Guid id)
+    public async Task<GetNoteResponse?> GetSharedNote(Guid id)
     {
         var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
+
+        if(note == null)
+            return null;
 
         if(note.IsPublic == true ) return note.ToGetNoteResponse();
         return null;

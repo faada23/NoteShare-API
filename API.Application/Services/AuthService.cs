@@ -38,11 +38,12 @@ public class AuthService : IAuthService
 
     public async Task<bool> Register(RegisterRequest userRequest)
     {
-        var user = userRequest.ToUser();
-
-        if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == user.Username) != null ){
+        if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username) != null ){
             return false;
         }
+
+        var user = userRequest.ToUser();
+
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user,user.PasswordHash);
 
         var userRole = await UnitOfWork.RoleRepository.GetByFilter(p=> p.Name == "User");
@@ -52,7 +53,9 @@ public class AuthService : IAuthService
             throw new Exception("Default Roles are missing");
         }
 
-        if(userRequest.ModeratorCode == "12345") user.Roles.Add(moderatorRole);
+        if(userRequest.ModeratorCode == "12345")
+            user.Roles.Add(moderatorRole);
+
         user.Roles.Add(userRole);
 
         UnitOfWork.UserRepository.Insert(user);

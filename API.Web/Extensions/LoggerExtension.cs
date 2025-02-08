@@ -10,24 +10,26 @@ public static class LoggerExtension
     {   
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
-            // Кастомные логи (только с свойством "LogType = Custom")
+            //  логи с свойством "LogType = custom"
             .WriteTo.Logger(lc => lc
                 .Filter.ByIncludingOnly(logEvent =>
                     logEvent.Properties.TryGetValue("LogType", out var value) &&
-                    value.ToString().Trim('"') == "Custom")
+                    value.ToString().Trim('"') == "custom")
                 .WriteTo.File(
                     path: "Logs/custom-.log",
-                    rollingInterval: RollingInterval.Hour
+                    rollingInterval: RollingInterval.Hour,
+                    formatter: new Serilog.Formatting.Json.JsonFormatter()
                 )
             )
-            // Все остальные логи (исключая кастомные)
+            // HTTP логи 
             .WriteTo.Logger(lc => lc
                 .Filter.ByExcluding(logEvent =>
                     logEvent.Properties.TryGetValue("LogType", out var value) &&
-                    value.ToString().Trim('"') == "Custom")
+                    value.ToString().Trim('"') == "custom")
                 .WriteTo.File(
-                    path: "Logs/all-.log",
-                    rollingInterval: RollingInterval.Hour
+                    path: "Logs/HTTP-.log",
+                    rollingInterval: RollingInterval.Hour,
+                    formatter: new Serilog.Formatting.Json.JsonFormatter()
                 )
             )
             .WriteTo.Console()

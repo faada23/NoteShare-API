@@ -1,6 +1,8 @@
+using System.Globalization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -13,6 +15,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateNoteRequestValidator>();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en-US");
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddTransient(typeof(IValidatorInterceptor), typeof(LoggingValidatorInterceptor));
 
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("NoteShareConnection")));
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
@@ -49,15 +55,18 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 app.UseStaticFiles();
 
-
 app.UseRouting();
+
+app.UseValidationLogging();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapControllers();
+
 
 app.Run();

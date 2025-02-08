@@ -22,66 +22,87 @@ public class UserController : ControllerBase
     [HttpGet()]
     public async Task<ActionResult<GetUserResponse>> GetCurrentUser(){
 
-        var userGuid = GetCurrentUserId();
+        Guid? userGuid = GetCurrentUserId();
 
-        var userRequest = await _userService.GetUser(userGuid);
-
-        return Ok(userRequest);
+        if(userGuid != null)
+        {
+            var userRequest = await _userService.GetUser(userGuid.Value);
+            return Ok(userRequest);
+        }
+        return NotFound();
     }
 
     [HttpPut("Password")]
     public async Task<ActionResult> UpdatePassword([FromBody] PasswordUpdateRequest updateRequest){
 
-        var userGuid = GetCurrentUserId();
+        Guid? userGuid = GetCurrentUserId();
 
-        var result = await _userService.UpdatePassword(userGuid,updateRequest.newPassword);
-        if(result){
-            
-            return Logout();
+        if(userGuid != null)
+        {
+            var result = await _userService.UpdatePassword(userGuid.Value,updateRequest.newPassword);
+
+            if(result)
+            {    
+                return Logout();
+            }
+            return BadRequest("Update Error");
         }
-        return BadRequest("Update Error");
+
+        return NotFound();
     }
 
     [HttpPut("Username")]
     public async Task<ActionResult> UpdateUsername([FromBody] UsernameUpdateRequest updateRequest){
 
-        var userGuid = GetCurrentUserId();
+        Guid? userGuid = GetCurrentUserId();
 
-        var result = await _userService.UpdateUsername(userGuid,updateRequest.newUsername);
-        if(result){
-            
-            return Logout();
+        if(userGuid != null)
+        {
+            var result = await _userService.UpdateUsername(userGuid.Value,updateRequest.newUsername);
+            if(result)
+            {    
+                return Logout();
+            }
+            return BadRequest("This username is taken");
         }
 
-        return BadRequest("This username is taken");
-    }
-
-    [HttpPost("Logout")]
-    public ActionResult Logout(){
-        Response.Cookies.Delete("JwtCookie");
-        return Ok();
+        return NotFound();
     }
 
     [HttpDelete()]
     public async Task<ActionResult> DeleteCurrentUser(){
 
-        var userGuid = GetCurrentUserId();
+        Guid? userGuid = GetCurrentUserId();
+        
+        if(userGuid != null)
+        {
+            var result = await _userService.DeleteUser(userGuid.Value);
 
-        var result = await _userService.DeleteUser(userGuid);
-        if(result){
-            
-            return Logout();
+            if(result)
+            {    
+                return Logout();
+            }
+            return BadRequest("Delete Error");
         }
         return NotFound();
     
     }
 
+    [HttpPost("Logout")]
+    public ActionResult Logout(){
+
+        Response.Cookies.Delete("JwtCookie");
+        return Ok();
+    }
+
+
     //helper method
-    private Guid GetCurrentUserId()
+    private Guid? GetCurrentUserId()
     {
         var userId = User.FindFirstValue("Id");
         if (!Guid.TryParse(userId, out var userGuid))
-            throw new InvalidDataException();
+            return null;
+
         return userGuid;
     }
 }

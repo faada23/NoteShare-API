@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using Serilog.Context;
 
 [ApiController]
 [Route("[controller]")]
@@ -18,14 +19,18 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public async Task<ActionResult> Register([FromBody] RegisterRequest userRequest){
-
+    public async Task<ActionResult> Register([FromBody] RegisterRequest userRequest)
+    {   
         var result = await _authService.Register(userRequest);
+
         if(result){
 
             return Ok();
-        }        
-        return BadRequest("Wrong Registration Data");
+        }
+        else{        
+            return BadRequest("Wrong Registration Data");
+        }
+        
     }
 
     [HttpPost("Login")]
@@ -40,6 +45,7 @@ public class AuthController : ControllerBase
         }
 
         return StatusCode(500,"Wrong authentication data");
+        
     }
 
 }

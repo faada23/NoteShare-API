@@ -43,7 +43,6 @@ public class UserService : IUserService
     }
 
     public async Task<bool> DeleteUser(Guid id){
-        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
         var result = UnitOfWork.UserRepository.Delete(id);
         if(result == false){
             return false;

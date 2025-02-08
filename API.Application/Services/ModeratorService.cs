@@ -12,6 +12,16 @@ public class ModeratorService : IModeratorService
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == userRequest.id);
         if(user != null){
             user.IsBanned = userRequest.banStatus;
+
+            var userPublicNotes =
+            (await UnitOfWork.NoteRepository.GetAll())
+                .Where(p => p.UserId == user.Id)
+                .Where(x => x.IsPublic == true);
+
+            foreach(var t in userPublicNotes){
+                UnitOfWork.NoteRepository.Delete(t);
+            }
+
             await UnitOfWork.SaveAsync();
             return true;
         }

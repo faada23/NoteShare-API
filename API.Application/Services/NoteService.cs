@@ -38,11 +38,17 @@ public class NoteService : INoteService
         return false;
     }
 
-    public async Task<GetNoteResponse> GetUserNote(Guid id, Guid userId)
+    public async Task<GetNoteResponse?> GetUserNote(Guid id, Guid userId)
     {
         var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
-        if(note.UserId != userId) return null;
-        else return note.ToGetNoteResponse();
+
+        if(note == null)
+            return null;
+
+        if(note.UserId != userId)
+            return null;
+        
+        return note.ToGetNoteResponse();
          
     }
 

@@ -9,6 +9,6 @@ public class PasswordUpdateRequestValidator : AbstractValidator<PasswordUpdateRe
             .MinimumLength(8)
             .MaximumLength(50)
             .Matches(@"\d")
-            .WithMessage("'Password' должен содеражть цифры");
+            .WithMessage("'Password' must contain numbers");
     }
 }

@@ -6,9 +6,9 @@ namespace API.Application.Mapper;
 public static class Mapper {
 
     public static User ToUser(this RegisterRequest userRequest)
-    {
+    {   
         return new User(
-            new Guid(),
+            Guid.NewGuid(),
             userRequest.Username,
             userRequest.Password,
             false,
@@ -40,7 +40,7 @@ public static class Mapper {
     public static Note ToNote(this CreateNoteRequest noteRequest,Guid userId){
         var now = DateTime.UtcNow;
         return new Note(
-            new Guid(),
+            Guid.NewGuid(),
             noteRequest.Title,
             noteRequest.Content,
             noteRequest.isPublic,
