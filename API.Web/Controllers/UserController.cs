@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using API.Core.Models;
 using API.Application.DTOs;
-using API.Application.Mapper;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using Microsoft.Extensions.Configuration.UserSecrets;
 
 [ApiController]
 [Route("[controller]")]

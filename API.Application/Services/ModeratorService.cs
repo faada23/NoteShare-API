@@ -13,19 +13,18 @@ public class ModeratorService : IModeratorService
         if(user != null){
             user.IsBanned = userRequest.banStatus;
 
-            var userPublicNotes =
-            (await UnitOfWork.NoteRepository.GetAll())
-                .Where(p => p.UserId == user.Id)
-                .Where(x => x.IsPublic == true);
+            if(user.IsBanned == true){
+                var userPublicNotes = await UnitOfWork.NoteRepository
+                    .GetAll(p => p.UserId == user.Id && p.IsPublic == true);
 
-            foreach(var t in userPublicNotes){
-                UnitOfWork.NoteRepository.Delete(t);
+                foreach(var t in userPublicNotes){
+                    UnitOfWork.NoteRepository.Delete(t);
+                }
             }
-
             await UnitOfWork.SaveAsync();
             return true;
         }
-        else return false;
+        return false;
     }
 
     public async Task<bool> DeletePublicNote(Guid id)

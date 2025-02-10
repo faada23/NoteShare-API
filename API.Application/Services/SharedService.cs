@@ -24,8 +24,8 @@ public class SharedService : ISharedService
 
     public async Task<IEnumerable<GetNoteResponse>> GetSharedNotes()
     {
-        var notes = await UnitOfWork.NoteRepository.GetAll();
+        var notes = await UnitOfWork.NoteRepository.GetAll(p => p.IsPublic == true);
 
-        return notes.Where(p => p.IsPublic == true).Select(p => p.ToGetNoteResponse());
+        return notes.Select(p => p.ToGetNoteResponse());
     }
 }

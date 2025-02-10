@@ -1,14 +1,9 @@
-using System.Diagnostics.Tracing;
-using System.Xml.Serialization;
+
 using API.Application.DTOs;
 using API.Application.Mapper;
 using API.Core.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using Serilog.Context;
+
 
 public class AuthService : IAuthService
 {
@@ -53,6 +48,7 @@ public class AuthService : IAuthService
             throw new Exception("Default Roles are missing");
         }
 
+        //для тестов
         if(userRequest.ModeratorCode == "12345")
             user.Roles.Add(moderatorRole);
 

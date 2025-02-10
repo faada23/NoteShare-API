@@ -54,8 +54,8 @@ public class NoteService : INoteService
 
     public async Task<IEnumerable<GetNoteResponse>> GetUserNotes(Guid userId)
     {
-        var notes = await UnitOfWork.NoteRepository.GetAll();
-        return notes.Where(p=> p.UserId == userId).Select(a => a.ToGetNoteResponse());
+        var notes = await UnitOfWork.NoteRepository.GetAll(p=> p.UserId == userId);
+        return notes.Select(a => a.ToGetNoteResponse());
     }
 
     public async Task<bool> UpdateUserNote(UpdateNoteRequest noteRequest,Guid userId)
@@ -71,10 +71,9 @@ public class NoteService : INoteService
     }
 
     public async Task<bool> NoteVisibility(Guid id, Guid userId){
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == id);
-        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == userId);
+        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == id,"Users");
 
-        if(note.UserId == userId && user.IsBanned == false)
+        if(note.UserId == userId && note.User!.IsBanned == false)
         {
             note.IsPublic = !note.IsPublic;
             UnitOfWork.NoteRepository.Update(note);

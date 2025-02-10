@@ -6,6 +6,6 @@ public interface IRepository<T> where T : class
     void Delete(T entity);
     bool Delete(Guid id);
     void Update(T entity);
-    Task<T> GetByFilter(Expression<Func<T, bool>> filter,string? includeProperties = null);
-    Task<IEnumerable<T>> GetAll(string? includeProperties = null);
+    Task<T> GetByFilter(Expression<Func<T, bool>> filter, string? includeProperties = null);
+    Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
 }

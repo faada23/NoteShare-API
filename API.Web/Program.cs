@@ -15,6 +15,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateNoteRequestValidator>();
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+
 ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en-US");
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

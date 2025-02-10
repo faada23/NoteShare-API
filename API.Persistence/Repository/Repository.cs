@@ -38,9 +38,15 @@ public class Repository<T> : IRepository<T> where T : class
         return false;
     }
 
-    public async Task<IEnumerable<T>> GetAll(string? includeProperties = null)
+    public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null,string? includeProperties = null)
     {
         IQueryable<T> query = dbSet;
+        
+        if(filter != null)
+        {
+            query = query.Where(filter);
+        }
+
         if (!string.IsNullOrEmpty(includeProperties))
         {
             foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
@@ -51,7 +57,7 @@ public class Repository<T> : IRepository<T> where T : class
         return await query.ToListAsync();
     }
 
-    public async Task<T> GetByFilter( Expression<Func<T, bool>> filter, string? includeProperties = null)
+    public async Task<T> GetByFilter(Expression<Func<T, bool>> filter, string? includeProperties = null)
     {
         IQueryable<T> query = dbSet;
         query = query.Where(filter);

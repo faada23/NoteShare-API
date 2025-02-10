@@ -1,10 +1,7 @@
-using System.Dynamic;
 using API.Core.Models;
 using API.Application.DTOs;
 using API.Application.Mapper;
-using System.Security.Principal;
 using Microsoft.AspNetCore.Identity;
-using System.IO.Compression;
 
 public class UserService : IUserService
 {
@@ -24,21 +21,27 @@ public class UserService : IUserService
     public async Task<bool> UpdateUsername(Guid id,string newName)
     {
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
-        if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == user.Username) != null ){
+
+        if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == user.Username) != null )
             return false;
-        }
+        
         user.Username = newName;
+
         UnitOfWork.UserRepository.Update(user);
         await UnitOfWork.SaveAsync();
+
         return true;
     }
 
     public async Task<bool> UpdatePassword(Guid id,string newPassword)
     {
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user, newPassword);
+
         UnitOfWork.UserRepository.Update(user); 
         await UnitOfWork.SaveAsync();
+
         return true;
     }
 

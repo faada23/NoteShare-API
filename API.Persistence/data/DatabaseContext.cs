@@ -1,12 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using API.Core.Models;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 public class DatabaseContext : DbContext
 {
-    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
-    {
-    
-    }
+    public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) {}
 
     public DbSet<User> Users {get;set;}
     public DbSet<Role> Roles {get;set;}
@@ -23,10 +21,10 @@ public class DatabaseContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-
         var adminId = Guid.Parse("00000000-0000-0000-0000-000000000001");
         var userId = Guid.Parse("00000000-0000-0000-0000-000000000002");
         var guestId = Guid.Parse("00000000-0000-0000-0000-000000000003");
+
         var userRoleId = Guid.Parse("00000000-0000-0000-0000-000000000004");
         var moderatorRoleId = Guid.Parse("00000000-0000-0000-0000-000000000005");
 
@@ -58,6 +56,8 @@ public class DatabaseContext : DbContext
             )
         };
 
+        modelBuilder.Entity<User>().HasData(users);
+
         modelBuilder.Entity<Role>(b =>
         {
             b.HasData(
@@ -67,7 +67,6 @@ public class DatabaseContext : DbContext
             
         });
         
-        modelBuilder.Entity<User>().HasData(users);
     }
 
 }

@@ -1,8 +1,7 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using Serilog.Context;
+
 
 public class LoggingValidatorInterceptor : IValidatorInterceptor
 {
