@@ -30,6 +30,9 @@ public class NoteService : INoteService
     {   
         var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
 
+        if(note == null)
+            return false;
+
         if(note.UserId == userId){
 
             UnitOfWork.NoteRepository.Delete(id);
@@ -61,6 +64,10 @@ public class NoteService : INoteService
     public async Task<bool> UpdateUserNote(UpdateNoteRequest noteRequest,Guid userId)
     {
         var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == noteRequest.id);
+
+        if(note == null)
+            return false;
+
         if(note.UserId == userId){
             note.Update(noteRequest);
             UnitOfWork.NoteRepository.Update(note);
@@ -71,7 +78,10 @@ public class NoteService : INoteService
     }
 
     public async Task<bool> NoteVisibility(Guid id, Guid userId){
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == id,"Users");
+        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == id,"User");
+
+        if(note == null)
+            return false;
 
         if(note.UserId == userId && note.User!.IsBanned == false)
         {

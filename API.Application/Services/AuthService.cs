@@ -1,4 +1,3 @@
-
 using API.Application.DTOs;
 using API.Application.Mapper;
 using API.Core.Models;
@@ -42,15 +41,10 @@ public class AuthService : IAuthService
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user,user.PasswordHash);
 
         var userRole = await UnitOfWork.RoleRepository.GetByFilter(p=> p.Name == "User");
-        var moderatorRole = await UnitOfWork.RoleRepository.GetByFilter(p => p.Name == "Moderator");
 
-        if(userRole == null || moderatorRole == null ){
+        if(userRole == null){
             throw new Exception("Default Roles are missing");
         }
-
-        //для тестов
-        if(userRequest.ModeratorCode == "12345")
-            user.Roles.Add(moderatorRole);
 
         user.Roles.Add(userRole);
 

@@ -84,7 +84,7 @@ public class UserController : ControllerBase
     
     }
 
-    [HttpPost("Logout")]
+    [HttpDelete("Logout")]
     public ActionResult Logout(){
 
         Response.Cookies.Delete("JwtCookie");

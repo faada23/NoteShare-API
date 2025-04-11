@@ -28,5 +28,7 @@ public class User {
         PasswordHash = passwordHash;
         IsBanned = isBanned;
         CreatedAt = createdAt;
+
+
     }
 }

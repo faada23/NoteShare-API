@@ -2,7 +2,7 @@ namespace API.Core.Models;
 public class Role{
     public Guid Id {get;set;}
     public string Name {get;set;} = null!;
-    public ICollection<User> users {get;set;} = new List<User>();
+    public ICollection<User> Users {get;set;} = new List<User>();
 
     public Role(Guid id, string name){
         if(id.Equals(Guid.Empty)){
