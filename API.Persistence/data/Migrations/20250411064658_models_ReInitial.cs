@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace API.Persistence.data.Migrations
 {
     /// <inheritdoc />
-    public partial class GuidInitialCreate : Migration
+    public partial class models_ReInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -66,11 +66,11 @@ namespace API.Persistence.data.Migrations
                 columns: table => new
                 {
                     RolesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    usersId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UsersId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoleUser", x => new { x.RolesId, x.usersId });
+                    table.PrimaryKey("PK_RoleUser", x => new { x.RolesId, x.UsersId });
                     table.ForeignKey(
                         name: "FK_RoleUser_Roles_RolesId",
                         column: x => x.RolesId,
@@ -78,8 +78,8 @@ namespace API.Persistence.data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoleUser_Users_usersId",
-                        column: x => x.usersId,
+                        name: "FK_RoleUser_Users_UsersId",
+                        column: x => x.UsersId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -91,9 +91,9 @@ namespace API.Persistence.data.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoleUser_usersId",
+                name: "IX_RoleUser_UsersId",
                 table: "RoleUser",
-                column: "usersId");
+                column: "UsersId");
         }
 
         /// <inheritdoc />

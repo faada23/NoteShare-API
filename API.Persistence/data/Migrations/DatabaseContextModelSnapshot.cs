@@ -67,18 +67,6 @@ namespace API.Persistence.data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("3f4a5b6c-7d8e-4f4a-5b6c-7d8e4f4a5b6c"),
-                            Name = "Moderator"
-                        },
-                        new
-                        {
-                            Id = new Guid("7e8f9a0b-1c2d-4e8f-9a0b-1c2d4e8f9a0b"),
-                            Name = "User"
-                        });
                 });
 
             modelBuilder.Entity("API.Core.Models.User", b =>
@@ -104,24 +92,6 @@ namespace API.Persistence.data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("f42b3e7d-9c5a-4b1f-8b3e-7d9c5a4b1f8b"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsBanned = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEDKeGlx3GBKx0sij9+aGvKW5q/BWYLB7jeyWhYFavnz8MM8Kb0KO6wXnuEhwKwA3Qw==",
-                            Username = "moder1"
-                        },
-                        new
-                        {
-                            Id = new Guid("a1b2c3d4-e5f6-4a1b-2c3d-4e5f6a1b2c3d"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsBanned = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEFf8EZDaZNR9N5r66K5zpnbJ2lY3Ud4jPfj47A0gHBXY/wuAbbB5y2cM5aVsmlIcMQ==",
-                            Username = "moder2"
-                        });
                 });
 
             modelBuilder.Entity("RoleUser", b =>
@@ -137,18 +107,6 @@ namespace API.Persistence.data.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("RoleUser");
-
-                    b.HasData(
-                        new
-                        {
-                            RolesId = new Guid("3f4a5b6c-7d8e-4f4a-5b6c-7d8e4f4a5b6c"),
-                            UsersId = new Guid("f42b3e7d-9c5a-4b1f-8b3e-7d9c5a4b1f8b")
-                        },
-                        new
-                        {
-                            RolesId = new Guid("3f4a5b6c-7d8e-4f4a-5b6c-7d8e4f4a5b6c"),
-                            UsersId = new Guid("a1b2c3d4-e5f6-4a1b-2c3d-4e5f6a1b2c3d")
-                        });
                 });
 
             modelBuilder.Entity("API.Core.Models.Note", b =>

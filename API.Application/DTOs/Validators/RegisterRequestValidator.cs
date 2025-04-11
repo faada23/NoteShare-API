@@ -18,9 +18,5 @@ public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
             .WithMessage("'Password' must contain numbers")
             .NotEqual(req => req.Username)
             .WithMessage("'Password' can't match with 'Username'");
-
-        RuleFor(req => req.ModeratorCode)
-            .NotNull()
-            .MaximumLength(50);
     }
 }

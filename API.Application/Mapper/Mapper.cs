@@ -8,10 +8,8 @@ public static class Mapper {
     public static User ToUser(this RegisterRequest userRequest)
     {   
         return new User(
-            Guid.NewGuid(),
             userRequest.Username,
             userRequest.Password,
-            false,
             DateTime.UtcNow
             );
     }
@@ -40,7 +38,6 @@ public static class Mapper {
     public static Note ToNote(this CreateNoteRequest noteRequest,Guid userId){
         var now = DateTime.UtcNow;
         return new Note(
-            Guid.NewGuid(),
             noteRequest.Title,
             noteRequest.Content,
             noteRequest.isPublic,

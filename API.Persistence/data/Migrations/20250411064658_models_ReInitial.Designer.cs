@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Persistence.data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250122141912_GuidInitialCreate")]
-    partial class GuidInitialCreate
+    [Migration("20250411064658_models_ReInitial")]
+    partial class models_ReInitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace API.Persistence.data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Note", b =>
+            modelBuilder.Entity("API.Core.Models.Note", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace API.Persistence.data.Migrations
                     b.ToTable("Notes");
                 });
 
-            modelBuilder.Entity("Role", b =>
+            modelBuilder.Entity("API.Core.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -72,22 +72,7 @@ namespace API.Persistence.data.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<Guid>("RolesId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("usersId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("RolesId", "usersId");
-
-                    b.HasIndex("usersId");
-
-                    b.ToTable("RoleUser");
-                });
-
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("API.Core.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,9 +97,24 @@ namespace API.Persistence.data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Note", b =>
+            modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("User", "User")
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("RolesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("RoleUser");
+                });
+
+            modelBuilder.Entity("API.Core.Models.Note", b =>
+                {
+                    b.HasOne("API.Core.Models.User", "User")
                         .WithMany("Notes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -125,20 +125,20 @@ namespace API.Persistence.data.Migrations
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("Role", null)
+                    b.HasOne("API.Core.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("User", null)
+                    b.HasOne("API.Core.Models.User", null)
                         .WithMany()
-                        .HasForeignKey("usersId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("API.Core.Models.User", b =>
                 {
                     b.Navigation("Notes");
                 });

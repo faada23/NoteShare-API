@@ -18,9 +18,6 @@ builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsi
 
 ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en-US");
 
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddTransient(typeof(IValidatorInterceptor), typeof(LoggingValidatorInterceptor));
-
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(Environment.GetEnvironmentVariable("NoteShareConnection")));
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
 
@@ -58,7 +55,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseValidationLogging();
+//app.UseValidationLogging();
 
 app.UseAuthentication();
 app.UseAuthorization();
