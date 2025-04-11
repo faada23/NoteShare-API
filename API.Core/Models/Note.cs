@@ -1,7 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API.Core.Models;
 public class Note{
+
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id {get;set;}
     public string Title {get;set;} = null!;
     public string Content {get;set;} = null!;
@@ -12,11 +15,7 @@ public class Note{
     public User? User {get;set;}
 
 
-    public Note(Guid id, string title, string content, bool isPublic, DateTime createdAt, DateTime updatedAt, Guid userId ){
-
-        if(id.Equals(Guid.Empty)){
-            throw new Exception("Wrong id format");
-        }
+    public Note(string title, string content, bool isPublic, DateTime createdAt, DateTime updatedAt, Guid userId ){
         
         if(userId.Equals(Guid.Empty)){
             throw new Exception ("Wrong Id format");
@@ -30,7 +29,6 @@ public class Note{
             throw new Exception("content can't be null");
         }
 
-        Id = id;
         Title = title;
         Content = content;
         IsPublic = isPublic;
