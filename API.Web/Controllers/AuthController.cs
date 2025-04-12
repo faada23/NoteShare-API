@@ -21,15 +21,9 @@ public class AuthController : ControllerBase
     [HttpPost("Register")]
     public async Task<ActionResult> Register([FromBody] RegisterRequest userRequest)
     {   
-        var result = await _authService.Register(userRequest);
+        await _authService.Register(userRequest);
+        return Ok();
 
-        if(result){
-
-            return Ok();
-        }
-        else{        
-            return BadRequest("Wrong Registration Data");
-        }
         
     }
 

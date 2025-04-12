@@ -12,7 +12,7 @@ public class NoteService : INoteService
         UnitOfWork = unitOfWork;
     }
 
-    public async Task<bool> CreateUserNote(CreateNoteRequest noteRequest, Guid userId)
+    public async Task CreateUserNote(CreateNoteRequest noteRequest, Guid userId)
     {
         var note = noteRequest.ToNote(userId);
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == userId);
@@ -21,24 +21,20 @@ public class NoteService : INoteService
         if(user.IsBanned == false || note.IsPublic == false){ 
             UnitOfWork.NoteRepository.Insert(note);
             await UnitOfWork.SaveAsync();
-            return true;
         }
-        return false;
     }
 
-    public async Task<bool> DeleteUserNote(Guid id, Guid userId)
+    public async Task DeleteUserNote(Guid id, Guid userId)
     {   
         var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
 
-        if(note == null)
-            return false;
+        if(note == null) return;
 
         if(note.UserId == userId){
 
             UnitOfWork.NoteRepository.Delete(id);
             await UnitOfWork.SaveAsync();
         }
-        return false;
     }
 
     public async Task<GetNoteResponse?> GetUserNote(Guid id, Guid userId)
@@ -61,35 +57,29 @@ public class NoteService : INoteService
         return notes.Select(a => a.ToGetNoteResponse());
     }
 
-    public async Task<bool> UpdateUserNote(UpdateNoteRequest noteRequest,Guid userId)
+    public async Task UpdateUserNote(UpdateNoteRequest noteRequest,Guid userId)
     {
         var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == noteRequest.id);
 
-        if(note == null)
-            return false;
+        if(note == null) return;
 
         if(note.UserId == userId){
             note.Update(noteRequest);
             UnitOfWork.NoteRepository.Update(note);
             await UnitOfWork.SaveAsync();
-            return true;
         }
-        return false;
     }
 
-    public async Task<bool> NoteVisibility(Guid id, Guid userId){
+    public async Task NoteVisibility(Guid id, Guid userId){
         var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == id,"User");
 
-        if(note == null)
-            return false;
+        if(note == null) return;
 
         if(note.UserId == userId && note.User!.IsBanned == false)
         {
             note.IsPublic = !note.IsPublic;
             UnitOfWork.NoteRepository.Update(note);
             await UnitOfWork.SaveAsync();
-            return true;
         }
-        return false;
     }
 }

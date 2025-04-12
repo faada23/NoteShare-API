@@ -13,26 +13,20 @@ public class ModeratorController : ControllerBase{
         _moderatorService = moderatorService;
         }
 
-
     //User can't create public notes or share them
     [HttpPut("users/ban")]
     public async Task<ActionResult> BanUser([FromBody] BanUserRequest userRequest){
-        var result = await _moderatorService.BanUser(userRequest);
-        if(result){
-            
-            return Ok();
-        }
-        return NotFound();
+
+        await _moderatorService.BanUser(userRequest);
+        return Ok();
     }
 
     [HttpDelete("notes/{id}")]
     public async Task<ActionResult> DeletePublicNote(Guid id){
-        var result = await _moderatorService.DeletePublicNote(id);
-        if(result){
-            
-            return Ok();
-        }
-        return NotFound();
+
+        await _moderatorService.DeletePublicNote(id);
+        return Ok();
+
     }
 
     [HttpGet("Logs")]

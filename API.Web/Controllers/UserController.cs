@@ -35,13 +35,8 @@ public class UserController : ControllerBase
 
         if(userGuid != null)
         {
-            var result = await _userService.UpdatePassword(userGuid.Value,updateRequest.newPassword);
-
-            if(result)
-            {    
-                return Logout();
-            }
-            return BadRequest("Update Error");
+            await _userService.UpdatePassword(userGuid.Value,updateRequest.newPassword); 
+            return Logout();
         }
 
         return NotFound();
@@ -54,12 +49,8 @@ public class UserController : ControllerBase
 
         if(userGuid != null)
         {
-            var result = await _userService.UpdateUsername(userGuid.Value,updateRequest.newUsername);
-            if(result)
-            {    
-                return Logout();
-            }
-            return BadRequest("This username is taken");
+            await _userService.UpdateUsername(userGuid.Value,updateRequest.newUsername);
+            return Logout();
         }
 
         return NotFound();
@@ -72,13 +63,8 @@ public class UserController : ControllerBase
         
         if(userGuid != null)
         {
-            var result = await _userService.DeleteUser(userGuid.Value);
-
-            if(result)
-            {    
-                return Logout();
-            }
-            return BadRequest("Delete Error");
+            await _userService.DeleteUser(userGuid.Value);
+            return Logout();
         }
         return NotFound();
     

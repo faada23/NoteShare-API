@@ -18,22 +18,19 @@ public class UserService : IUserService
         return user.ToGetUserResponse();
     }
 
-    public async Task<bool> UpdateUsername(Guid id,string newName)
+    public async Task UpdateUsername(Guid id,string newName)
     {
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
 
         if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == user.Username) != null )
-            return false;
         
         user.Username = newName;
 
         UnitOfWork.UserRepository.Update(user);
         await UnitOfWork.SaveAsync();
-
-        return true;
     }
 
-    public async Task<bool> UpdatePassword(Guid id,string newPassword)
+    public async Task UpdatePassword(Guid id,string newPassword)
     {
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
 
@@ -42,15 +39,11 @@ public class UserService : IUserService
         UnitOfWork.UserRepository.Update(user); 
         await UnitOfWork.SaveAsync();
 
-        return true;
     }
 
-    public async Task<bool> DeleteUser(Guid id){
-        var result = UnitOfWork.UserRepository.Delete(id);
-        if(result == false){
-            return false;
-        }
+    public async Task DeleteUser(Guid id){
+        UnitOfWork.UserRepository.Delete(id);
         await UnitOfWork.SaveAsync();
-        return true;
+
     }
 }

@@ -30,10 +30,9 @@ public class AuthService : IAuthService
         return null;
     }
 
-    public async Task<bool> Register(RegisterRequest userRequest)
+    public async Task Register(RegisterRequest userRequest)
     {
         if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username) != null ){
-            return false;
         }
 
         var user = userRequest.ToUser();
@@ -50,6 +49,5 @@ public class AuthService : IAuthService
 
         UnitOfWork.UserRepository.Insert(user);
         await UnitOfWork.SaveAsync();
-        return true;
     }
 }

@@ -26,12 +26,8 @@ public class NoteController : ControllerBase{
 
         if(userGuid != null)
         {
-            var result = await _noteService.CreateUserNote(noteRequest,userGuid.Value);
-            if(result)
-            {    
-                return Ok();
-            }
-            return BadRequest("User baned from creating public notes");
+            await _noteService.CreateUserNote(noteRequest,userGuid.Value);
+            return Ok();
         }
         return NotFound("User not found");
     }
@@ -42,13 +38,8 @@ public class NoteController : ControllerBase{
         Guid? userGuid = GetCurrentUserId();
         if(userGuid != null)
         {
-            var result = await _noteService.DeleteUserNote(id,userGuid.Value);
-
-            if(result)
-            {    
-                return Ok();
-            }
-            return BadRequest("Delete Error");
+            await _noteService.DeleteUserNote(id,userGuid.Value);
+            return Ok();
         }
         return NotFound("User not found");
     }
@@ -94,12 +85,8 @@ public class NoteController : ControllerBase{
 
         if(userGuid != null)
         {
-            var result = await _noteService.UpdateUserNote(noteRequest,userGuid.Value);
-            if(result)
-            {
-                return Ok();
-            }
-            return BadRequest("Update error");    
+            await _noteService.UpdateUserNote(noteRequest,userGuid.Value);
+                return Ok();   
         }
 
         return NotFound("User not found");
@@ -112,12 +99,8 @@ public class NoteController : ControllerBase{
 
         if(userGuid != null)
         {
-            var result = await _noteService.NoteVisibility(id,userGuid.Value);
-            if(result)
-            {
-                return Ok();
-            }
-            return BadRequest("User baned from sharing notes");
+            await _noteService.NoteVisibility(id,userGuid.Value);
+            return Ok();
         }
         return NotFound("User not found");
     }

@@ -7,7 +7,7 @@ public class ModeratorService : IModeratorService
         UnitOfWork = unitOfWork;
     }
 
-    public async Task<bool> BanUser(BanUserRequest userRequest)
+    public async Task BanUser(BanUserRequest userRequest)
     {
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == userRequest.id);
         if(user != null){
@@ -22,22 +22,18 @@ public class ModeratorService : IModeratorService
                 }
             }
             await UnitOfWork.SaveAsync();
-            return true;
         }
-        return false;
     }
 
-    public async Task<bool> DeletePublicNote(Guid id)
+    public async Task DeletePublicNote(Guid id)
     {
         var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
         if(note != null){
             if(note.IsPublic == true){
                 UnitOfWork.NoteRepository.Delete(note);
                 await UnitOfWork.SaveAsync();
-                return true;
             }
         }
-        return false;
     }
 
     public Task GetLogs()
