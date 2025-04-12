@@ -1,4 +1,5 @@
 using System.Globalization;
+using API.Core.Models;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -55,7 +56,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseValidationLogging();
+//app.UseLogging();
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -66,5 +67,9 @@ app.UseSwaggerUI();
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    await DatabaseInitializer.Initialize(scope.ServiceProvider);
+}
 
 app.Run();
