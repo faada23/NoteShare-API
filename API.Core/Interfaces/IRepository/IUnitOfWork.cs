@@ -1,9 +1,11 @@
 using API.Core.Models;
-public interface IUnitOfWork 
-{
-    public IRepository<Role> RoleRepository {get; }
-    public IRepository<User> UserRepository {get; }
-    public IRepository<Note> NoteRepository {get; }
 
-    Task SaveAsync();
+public interface IUnitOfWork : IDisposable
+{   
+    bool Disposed {get;}
+    IRepository<Role> RoleRepository { get; }
+    IRepository<User> UserRepository { get; }
+    IRepository<Note> NoteRepository { get; }
+
+    Task<Result<int>> SaveAsync();
 }

@@ -10,11 +10,9 @@ using Serilog.Context;
 [AllowAnonymous]
 public class AuthController : ControllerBase
 {
-    private IUnitOfWork _unitOfWork {get;}
     private IAuthService _authService {get;}
 
-    public AuthController(IUnitOfWork unitOfWork, IAuthService authService){
-        _unitOfWork = unitOfWork;
+    public AuthController(IAuthService authService){
         _authService = authService;
     }
 

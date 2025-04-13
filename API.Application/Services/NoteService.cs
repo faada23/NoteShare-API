@@ -31,8 +31,8 @@ public class NoteService : INoteService
         if(note == null) return;
 
         if(note.UserId == userId){
-
-            UnitOfWork.NoteRepository.Delete(id);
+            
+            UnitOfWork.NoteRepository.Delete(note);
             await UnitOfWork.SaveAsync();
         }
     }

@@ -9,13 +9,11 @@ using Serilog.Context;
 [Route("[controller]")]
 [Authorize(Roles = "User")]
 public class NoteController : ControllerBase{
-    
-    private IUnitOfWork _unitOfWork {get;}
+
     private INoteService _noteService {get;}
 
-    public NoteController(IUnitOfWork unitOfWork, INoteService noteService)
+    public NoteController(INoteService noteService)
     {
-        _unitOfWork = unitOfWork;
         _noteService = noteService;
     }
 

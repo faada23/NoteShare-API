@@ -25,48 +25,51 @@ public class Repository<T> : IRepository<T> where T : class
             dbSet.Remove(entity);
     }
 
-    public bool Delete(Guid id)
-    {   
-        T? entity = dbSet.Find(id);
 
-        if(entity != null){
-
-            dbSet.Remove(entity);
-            return true;
-        }
-
-        return false;
-    }
-
-    public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null,string? includeProperties = null)
+    public async Task<PagedList<T>> GetAll(
+        Expression<Func<T, bool>>? filter = null,
+        PaginationParameters? pagParams = null, 
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, 
+        string? includeProperties = null
+        )
     {
         IQueryable<T> query = dbSet;
-        
+
         if(filter != null)
         {
             query = query.Where(filter);
         }
 
-        if (!string.IsNullOrEmpty(includeProperties))
-        {
-            foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-            {
-                query = query.Include(includeProp);
-            }
+        //ef.property translates to sql and works on db side
+        orderBy ??= q => q.OrderByDescending(e => EF.Property<Guid>(e,"Id"));
+        
+        var totalItems = await query.CountAsync();
+
+        if(pagParams != null){
+            
+            query = query
+                .Skip((pagParams.Page - 1) * pagParams.PageSize)
+                .Take(pagParams.PageSize);
+
+            query = IncludeProperties(query, includeProperties);
+
+            var pagedList = await query.ToListAsync();
+            return PagedList<T>.ToPagedList(pagedList,pagParams.Page,pagParams.PageSize,totalItems);
         }
-        return await query.ToListAsync();
+
+        query = IncludeProperties(query, includeProperties);
+
+        var list = await query.ToListAsync();
+        return PagedList<T>.ToPagedList(list,1,totalItems,totalItems);
     }
 
     public async Task<T> GetByFilter(Expression<Func<T, bool>> filter, string? includeProperties = null)
     {
         IQueryable<T> query = dbSet;
         query = query.Where(filter);
-        if(!string.IsNullOrEmpty(includeProperties)){
-            foreach(var includeProp in includeProperties
-            .Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries)){
-                query = query.Include(includeProp);
-            }
-        }
+
+        query = IncludeProperties(query, includeProperties);
+
         return await query.FirstOrDefaultAsync();
     }
 
@@ -76,4 +79,16 @@ public class Repository<T> : IRepository<T> where T : class
         dbSet.Update(entity);
     }
     
+    private IQueryable<T> IncludeProperties(IQueryable<T> query, string? includeProperties)
+    {   
+        if (!string.IsNullOrEmpty(includeProperties))
+        {
+            foreach (var includeProp in includeProperties.Split(',', StringSplitOptions.RemoveEmptyEntries))
+            {
+                query = query.Include(includeProp);
+            }
+        }
+
+        return query;
+    }
 }

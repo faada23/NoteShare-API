@@ -42,8 +42,13 @@ public class UserService : IUserService
     }
 
     public async Task DeleteUser(Guid id){
-        UnitOfWork.UserRepository.Delete(id);
-        await UnitOfWork.SaveAsync();
+
+        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+
+        if(user != null){
+            UnitOfWork.UserRepository.Delete(user);
+            await UnitOfWork.SaveAsync();
+        }
 
     }
 }
