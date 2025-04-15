@@ -4,7 +4,7 @@ public class PasswordUpdateRequestValidator : AbstractValidator<PasswordUpdateRe
 {
     public PasswordUpdateRequestValidator(){
         
-         RuleFor(req => req.newPassword)
+         RuleFor(req => req.NewPassword)
             .NotEmpty()
             .MinimumLength(8)
             .MaximumLength(50)

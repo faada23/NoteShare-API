@@ -4,7 +4,7 @@ public class UsernameUpdateRequestValidator : AbstractValidator<UsernameUpdateRe
 {
     public UsernameUpdateRequestValidator(){
         
-        RuleFor(req => req.newUsername)
+        RuleFor(req => req.NewUsername)
             .NotEmpty()
             .MinimumLength(4)
             .MaximumLength(50);

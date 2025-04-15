@@ -10,7 +10,7 @@ public class ModeratorService : IModeratorService
     public async Task<Result<bool>> SwitchBanStatus(BanUserRequest userRequest)
     {   
         var user = await UnitOfWork.UserRepository.GetByFilter(
-                filter: x => x.Id == userRequest.id
+                filter: x => x.Id == userRequest.Id
             );
         if(user == null) return Result<bool>.Failure("User was not found",ErrorType.RecordNotFound);
 
@@ -19,7 +19,7 @@ public class ModeratorService : IModeratorService
         if(user.IsBanned && userRequest.DeletePublicNotes){
 
             var notes = await UnitOfWork.NoteRepository.GetAll(
-                filter: x => x.UserId == userRequest.id && x.IsPublic == true
+                filter: x => x.UserId == userRequest.Id && x.IsPublic == true
             );
 
             foreach(var t in notes){

@@ -1,5 +1,5 @@
 public record BanUserRequest
 (
-    Guid id,
+    Guid Id,
     bool DeletePublicNotes
 );

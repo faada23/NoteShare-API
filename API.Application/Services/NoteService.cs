@@ -70,7 +70,7 @@ public class NoteService : INoteService
 
     public async Task<Result<GetNoteResponse>> UpdateUserNote(UpdateNoteRequest noteRequest,Guid userId)
     {
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == noteRequest.id);
+        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == noteRequest.Id);
 
         if(note == null || note.UserId != userId) return Result<GetNoteResponse>.Failure("Note was not found",ErrorType.RecordNotFound);
 

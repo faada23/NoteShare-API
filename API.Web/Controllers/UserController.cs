@@ -33,7 +33,7 @@ public class UserController : ControllerBase
         if(userGuid == null) 
             return NotFound("User not found");
 
-        var result = await _userService.UpdatePassword(userGuid.Value,updateRequest.newPassword);
+        var result = await _userService.UpdatePassword(userGuid.Value,updateRequest.NewPassword);
         if(result.IsSuccess)
             Logout();
         return result.ToActionResult<bool>();
@@ -47,7 +47,7 @@ public class UserController : ControllerBase
         if(userGuid == null) 
             return NotFound("User not found");
 
-        var result = await _userService.UpdateUsername(userGuid.Value,updateRequest.newUsername);
+        var result = await _userService.UpdateUsername(userGuid.Value,updateRequest.NewUsername);
         if(result.IsSuccess)
             Logout();
         return result.ToActionResult<GetUserResponse>();

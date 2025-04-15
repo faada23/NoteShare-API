@@ -1,3 +1,3 @@
 public record PasswordUpdateRequest(
-    string newPassword
+    string NewPassword
 );

@@ -6,7 +6,7 @@ public class UpdateNoteRequestValidator : AbstractValidator<UpdateNoteRequest>
 {
     public UpdateNoteRequestValidator(){
         
-        RuleFor(note => note.id)
+        RuleFor(note => note.Id)
             .NotNull()
             .NotEqual(Guid.Empty);
             
@@ -14,7 +14,7 @@ public class UpdateNoteRequestValidator : AbstractValidator<UpdateNoteRequest>
             .NotEmpty()
             .MaximumLength(100);
 
-        RuleFor(note => note.content)
+        RuleFor(note => note.Content)
             .NotNull();
     }
 }

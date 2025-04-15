@@ -4,7 +4,7 @@ public class BanUserRequestValidator : AbstractValidator<BanUserRequest>
 {
     public BanUserRequestValidator(){
 
-        RuleFor(req => req.id)
+        RuleFor(req => req.Id)
             .NotNull()
             .NotEqual(Guid.Empty);
         

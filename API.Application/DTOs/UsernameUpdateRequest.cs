@@ -1,3 +1,3 @@
 public record UsernameUpdateRequest(
-    string newUsername
+    string NewUsername
 );
