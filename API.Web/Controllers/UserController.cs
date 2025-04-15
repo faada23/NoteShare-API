@@ -15,68 +15,56 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpGet()]
+    [HttpGet("/me")]
     public async Task<ActionResult<GetUserResponse>> GetCurrentUser(){
 
         Guid? userGuid = GetCurrentUserId();
+        if(userGuid == null) 
+            return NotFound("User not found"); 
 
-        if(userGuid != null)
-        {
-            var userRequest = await _userService.GetUser(userGuid.Value);
-            return Ok(userRequest);
-        }
-        return NotFound();
+        var result = await _userService.GetUser(userGuid.Value);
+        return result.ToActionResult<GetUserResponse>();
     }
 
-    [HttpPut("Password")]
-    public async Task<ActionResult> UpdatePassword([FromBody] PasswordUpdateRequest updateRequest){
+    [HttpPatch("Password")]
+    public async Task<ActionResult<bool>> UpdatePassword([FromBody] PasswordUpdateRequest updateRequest){
 
         Guid? userGuid = GetCurrentUserId();
+        if(userGuid == null) 
+            return NotFound("User not found");
 
-        if(userGuid != null)
-        {
-            await _userService.UpdatePassword(userGuid.Value,updateRequest.newPassword); 
-            return Logout();
-        }
+        var result = await _userService.UpdatePassword(userGuid.Value,updateRequest.newPassword);
+        if(result.IsSuccess)
+            Logout();
+        return result.ToActionResult<bool>();
 
-        return NotFound();
     }
 
-    [HttpPut("Username")]
-    public async Task<ActionResult> UpdateUsername([FromBody] UsernameUpdateRequest updateRequest){
+    [HttpPatch("Username")]
+    public async Task<ActionResult<GetUserResponse>> UpdateUsername([FromBody] UsernameUpdateRequest updateRequest){
 
         Guid? userGuid = GetCurrentUserId();
+        if(userGuid == null) 
+            return NotFound("User not found");
 
-        if(userGuid != null)
-        {
-            await _userService.UpdateUsername(userGuid.Value,updateRequest.newUsername);
-            return Logout();
-        }
-
-        return NotFound();
+        var result = await _userService.UpdateUsername(userGuid.Value,updateRequest.newUsername);
+        if(result.IsSuccess)
+            Logout();
+        return result.ToActionResult<GetUserResponse>();
     }
 
-    [HttpDelete()]
-    public async Task<ActionResult> DeleteCurrentUser(){
+    [HttpDelete]
+    public async Task<ActionResult<bool>> DeleteCurrentUser(){
 
         Guid? userGuid = GetCurrentUserId();
-        
-        if(userGuid != null)
-        {
-            await _userService.DeleteUser(userGuid.Value);
-            return Logout();
-        }
-        return NotFound();
-    
+        if(userGuid == null) 
+            return NotFound("User not found");
+
+        var result = await _userService.DeleteUser(userGuid.Value);
+        if(result.IsSuccess)
+            Logout();
+        return result.ToActionResult<bool>();
     }
-
-    [HttpDelete("Logout")]
-    public ActionResult Logout(){
-
-        Response.Cookies.Delete("JwtCookie");
-        return Ok();
-    }
-
 
     //helper method
     private Guid? GetCurrentUserId()
@@ -86,5 +74,10 @@ public class UserController : ControllerBase
             return null;
 
         return userGuid;
+    }
+
+    private void Logout(){
+
+        Response.Cookies.Delete("JwtCookie");
     }
 }

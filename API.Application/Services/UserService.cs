@@ -12,43 +12,50 @@ public class UserService : IUserService
         UnitOfWork = unitOfWork;
     }
 
-    public async Task<GetUserResponse> GetUser(Guid id)
+    public async Task<Result<GetUserResponse>> GetUser(Guid id)
     {   
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
-        return user.ToGetUserResponse();
+        if(user == null) return Result<GetUserResponse>.Failure("User was not found",ErrorType.RecordNotFound);
+        return Result<GetUserResponse>.Success(user.ToGetUserResponse());
     }
 
-    public async Task UpdateUsername(Guid id,string newName)
+    public async Task<Result<GetUserResponse>> UpdateUsername(Guid id,string newName)
     {
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
 
-        if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == user.Username) != null )
+        var existingUser = await UnitOfWork.UserRepository.GetByFilter(p => p.Username == newName);
+        if( existingUser != null ) return Result<GetUserResponse>.Failure("This username is already exists",ErrorType.AlreadyExists);
         
         user.Username = newName;
 
-        UnitOfWork.UserRepository.Update(user);
-        await UnitOfWork.SaveAsync();
+        var result = await UnitOfWork.SaveAsync();
+        if(result.IsSuccess) return Result<GetUserResponse>.Success(user.ToGetUserResponse());
+        return Result<GetUserResponse>.Failure("Error while changing username",ErrorType.DatabaseError);
     }
 
-    public async Task UpdatePassword(Guid id,string newPassword)
+    public async Task<Result<bool>> UpdatePassword(Guid id,string newPassword)
     {
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
 
+        if(user == null) return Result<bool>.Failure("User was not found",ErrorType.RecordNotFound);
+
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user, newPassword);
-
-        UnitOfWork.UserRepository.Update(user); 
-        await UnitOfWork.SaveAsync();
-
+ 
+        var result = await UnitOfWork.SaveAsync();
+        if(result.IsSuccess) return Result<bool>.Success(true);
+        return Result<bool>.Failure("Error while changing password",ErrorType.DatabaseError);
     }
 
-    public async Task DeleteUser(Guid id){
+    public async Task<Result<bool>> DeleteUser(Guid id){
 
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
 
-        if(user != null){
-            UnitOfWork.UserRepository.Delete(user);
-            await UnitOfWork.SaveAsync();
-        }
+        if(user == null) return Result<bool>.Failure("User was not found",ErrorType.RecordNotFound);
 
+        UnitOfWork.UserRepository.Delete(user);
+
+        var result = await UnitOfWork.SaveAsync();
+        if(result.IsSuccess) return Result<bool>.Success(true);
+        return Result<bool>.Failure("Error while changing password",ErrorType.DatabaseError);
     }
 }
