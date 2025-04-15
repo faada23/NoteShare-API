@@ -1,7 +1,7 @@
 public interface IModeratorService {
     public IUnitOfWork UnitOfWork{get;}
 
-    public Task BanUser(BanUserRequest banUserRequest);
-    public Task DeletePublicNote(Guid id);
+    public Task<Result<bool>> SwitchBanStatus(BanUserRequest banUserRequest);
+    public Task<Result<Guid>> DeletePublicNote(Guid id);
     public Task GetLogs();
 }

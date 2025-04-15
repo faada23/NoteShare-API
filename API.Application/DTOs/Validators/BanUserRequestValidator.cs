@@ -8,7 +8,7 @@ public class BanUserRequestValidator : AbstractValidator<BanUserRequest>
             .NotNull()
             .NotEqual(Guid.Empty);
         
-        RuleFor(req => req.banStatus)
+        RuleFor(req => req.DeletePublicNotes)
             .NotNull();
     }
 }

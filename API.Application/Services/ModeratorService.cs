@@ -7,33 +7,44 @@ public class ModeratorService : IModeratorService
         UnitOfWork = unitOfWork;
     }
 
-    public async Task BanUser(BanUserRequest userRequest)
-    {
-        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == userRequest.id);
-        if(user != null){
-            user.IsBanned = userRequest.banStatus;
+    public async Task<Result<bool>> SwitchBanStatus(BanUserRequest userRequest)
+    {   
+        var user = await UnitOfWork.UserRepository.GetByFilter(
+                filter: x => x.Id == userRequest.id
+            );
+        if(user == null) return Result<bool>.Failure("User was not found",ErrorType.RecordNotFound);
 
-            if(user.IsBanned == true){
-                var userPublicNotes = await UnitOfWork.NoteRepository
-                    .GetAll(p => p.UserId == user.Id && p.IsPublic == true);
+        user.IsBanned = !user.IsBanned;
 
-                foreach(var t in userPublicNotes){
-                    UnitOfWork.NoteRepository.Delete(t);
-                }
+        if(user.IsBanned && userRequest.DeletePublicNotes){
+
+            var notes = await UnitOfWork.NoteRepository.GetAll(
+                filter: x => x.UserId == userRequest.id && x.IsPublic == true
+            );
+
+            foreach(var t in notes){
+                UnitOfWork.NoteRepository.Delete(t);
             }
-            await UnitOfWork.SaveAsync();
+
         }
+
+        var result = await UnitOfWork.SaveAsync();
+        if(result.IsSuccess) return Result<bool>.Success(user.IsBanned);
+        return Result<bool>.Failure("Error while deleting notes",ErrorType.DatabaseError); 
     }
 
-    public async Task DeletePublicNote(Guid id)
+    public async Task<Result<Guid>> DeletePublicNote(Guid id)
     {
         var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
-        if(note != null){
-            if(note.IsPublic == true){
-                UnitOfWork.NoteRepository.Delete(note);
-                await UnitOfWork.SaveAsync();
-            }
+        if(note != null && note.IsPublic == true)
+        {
+            UnitOfWork.NoteRepository.Delete(note);
+        
+            var result = await UnitOfWork.SaveAsync();
+            if(result.IsSuccess) return Result<Guid>.Success(note.Id);
+            else return Result<Guid>.Failure("Error while deleting note",ErrorType.DatabaseError);
         }
+        return Result<Guid>.Failure("Note was not found",ErrorType.RecordNotFound);
     }
 
     public Task GetLogs()
