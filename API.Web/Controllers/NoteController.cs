@@ -18,89 +18,72 @@ public class NoteController : ControllerBase{
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateNote([FromBody] CreateNoteRequest noteRequest)
+    public async Task<ActionResult<GetNoteResponse>> CreateNote([FromBody] CreateNoteRequest noteRequest)
     {   
         Guid? userGuid = GetCurrentUserId();
+        if(userGuid == null) return NotFound("User not found");
 
-        if(userGuid != null)
-        {
-            await _noteService.CreateUserNote(noteRequest,userGuid.Value);
-            return Ok();
-        }
-        return NotFound("User not found");
+        var result = await _noteService.CreateUserNote(noteRequest,userGuid.Value);
+        return  result.ToActionResult();
     }
 
-    [HttpDelete]
-    public async Task<ActionResult> DeleteNote(Guid id)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult<Guid>> DeleteNote(Guid id)
     {
         Guid? userGuid = GetCurrentUserId();
-        if(userGuid != null)
-        {
-            await _noteService.DeleteUserNote(id,userGuid.Value);
-            return Ok();
-        }
-        return NotFound("User not found");
+        if(userGuid == null) return NotFound("User not found");
+
+        var result = await _noteService.DeleteUserNote(id,userGuid.Value);
+        return result.ToActionResult<Guid>();
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<GetNoteResponse?>> GetNote(Guid id)
+    public async Task<ActionResult<GetNoteResponse>> GetNote(Guid id)
     {   
         Guid? userGuid = GetCurrentUserId();
-
-        Log.Information($"User: {userGuid} invoked method GetNote , note: {id}");
-
-        if(userGuid != null)
-        {
-            var note = await _noteService.GetUserNote(id,userGuid.Value);
-
-            if(note != null)
-                return Ok(note);
-            
-            return NotFound("Note not found");
-        }
-        return NotFound("User not found");
-
+        if(userGuid == null) return NotFound("User not found");
+        
+        var result = await _noteService.GetUserNote(id,userGuid.Value);
+        return result.ToActionResult<GetNoteResponse>();
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<GetNoteResponse>>> GetNotes()
+    public async Task<ActionResult<PagedResponse<GetNoteResponse>>> GetNotes(
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize)
     {
         Guid? userGuid = GetCurrentUserId();
+        if(userGuid == null) 
+            return NotFound("User not found");
 
-        if(userGuid != null)
-        {
-            var notes = await _noteService.GetUserNotes(userGuid.Value);
-            return Ok(notes);
-        }
+       var pagParams = (page.HasValue && pageSize.HasValue)
+        ? new PaginationParameters { Page = page.Value, PageSize = pageSize.Value }
+        : null;
 
-        return NotFound("User not found");
+        var result = await _noteService.GetUserNotes(userGuid.Value,pagParams);
+        return result.ToActionResult<PagedResponse<GetNoteResponse>>();
     }
 
-    [HttpPut]
-    public async Task<ActionResult> UpdateNote([FromBody] UpdateNoteRequest noteRequest)
+    [HttpPatch]
+    public async Task<ActionResult<GetNoteResponse>> UpdateNote([FromBody] UpdateNoteRequest noteRequest)
     {
         Guid? userGuid = GetCurrentUserId();
-
-        if(userGuid != null)
-        {
-            await _noteService.UpdateUserNote(noteRequest,userGuid.Value);
-                return Ok();   
-        }
-
-        return NotFound("User not found");
+        if(userGuid == null) 
+            return NotFound("User not found");
+        
+        var result = await _noteService.UpdateUserNote(noteRequest,userGuid.Value);
+        return result.ToActionResult<GetNoteResponse>();   
     }
 
-    [HttpPut("{id}/Visibility")]
-    public async Task<ActionResult> PublishNote(Guid id)
+    [HttpPatch("{id}/Visibility")]
+    public async Task<ActionResult<bool>> PublishNote(Guid id)
     {
         Guid? userGuid = GetCurrentUserId();
+        if(userGuid == null) 
+            return NotFound("User not found");
 
-        if(userGuid != null)
-        {
-            await _noteService.NoteVisibility(id,userGuid.Value);
-            return Ok();
-        }
-        return NotFound("User not found");
+        var result = await _noteService.NoteVisibility(id,userGuid.Value);
+        return result.ToActionResult<bool>();
     }
 
     //helper method

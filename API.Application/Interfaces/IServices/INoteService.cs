@@ -4,10 +4,10 @@ using API.Core.Models;
 public interface INoteService
 {
     public IUnitOfWork UnitOfWork{get;}
-    public Task<IEnumerable<GetNoteResponse>> GetUserNotes(Guid userId);
-    public Task<GetNoteResponse?> GetUserNote(Guid id, Guid userId);
-    public Task CreateUserNote(CreateNoteRequest noteRequest,Guid userId);
-    public Task UpdateUserNote(UpdateNoteRequest id, Guid userId);
-    public Task DeleteUserNote(Guid id, Guid userId);
-    public Task NoteVisibility(Guid id, Guid userId);
+    public Task<Result<PagedResponse<GetNoteResponse>>> GetUserNotes(Guid userId,PaginationParameters? pagParams);
+    public Task<Result<GetNoteResponse>> GetUserNote(Guid id, Guid userId);
+    public Task<Result<GetNoteResponse>> CreateUserNote(CreateNoteRequest noteRequest,Guid userId);
+    public Task<Result<GetNoteResponse>> UpdateUserNote(UpdateNoteRequest id, Guid userId);
+    public Task<Result<Guid>> DeleteUserNote(Guid id, Guid userId);
+    public Task<Result<bool>> NoteVisibility(Guid id, Guid userId);
 }

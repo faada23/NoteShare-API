@@ -35,6 +35,18 @@ public static class Mapper {
         );
     }
 
+    public static PagedResponse<GetNoteResponse> ToPagedResponse(this PagedList<Note> notes){
+        var notesResponse = notes.Select(a => a.ToGetNoteResponse());
+
+        return new PagedResponse<GetNoteResponse>(
+            notesResponse.ToList(),
+            notes.CurrentPage,
+            notes.PageSize,
+            notes.TotalItems,
+            notes.PageSize
+        );
+    } 
+
     public static Note ToNote(this CreateNoteRequest noteRequest,Guid userId){
         var now = DateTime.UtcNow;
         return new Note(
