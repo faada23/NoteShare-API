@@ -4,6 +4,6 @@ using API.Core.Models;
 public interface ISharedService{
 
     public IUnitOfWork UnitOfWork{get;}
-    public Task<IEnumerable<GetNoteResponse>> GetSharedNotes();
-    public Task<GetNoteResponse?> GetSharedNote(Guid id);
+    public Task<Result<PagedResponse<GetNoteResponse>>> GetSharedNotes(PaginationParameters? pagParams);
+    public Task<Result<GetNoteResponse>> GetSharedNote(Guid id);
 }

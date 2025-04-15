@@ -2,6 +2,7 @@ using API.Application.DTOs;
 using API.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.AspNetCore.SignalR;
 
 [ApiController]
@@ -15,16 +16,22 @@ public class SharedController : ControllerBase{
     }
 
 
-    [HttpGet]
-    public async Task<ActionResult<List<GetNoteResponse>>> GetSharedNotes(){
-        var sharedNotes = await _sharedService.GetSharedNotes();
-        return Ok(sharedNotes);
+    [HttpGet("notes")]
+    public async Task<ActionResult<PagedResponse<GetNoteResponse>>> GetSharedNotes(
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize)
+    {
+        var pagParams = (page.HasValue && pageSize.HasValue)
+        ? new PaginationParameters { Page = page.Value, PageSize = pageSize.Value }
+        : null;
+
+        var result = await _sharedService.GetSharedNotes(pagParams);
+        return result.ToActionResult<PagedResponse<GetNoteResponse>>();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("note/{id}")]
     public async Task<ActionResult<GetNoteResponse>> GetSharedNote(Guid id){
-        var sharedNote = await _sharedService.GetSharedNote(id);
-        if(sharedNote == null) return NotFound();
-        else return Ok(sharedNote);
+        var result = await _sharedService.GetSharedNote(id);
+        return result.ToActionResult<GetNoteResponse>();
     }
 }

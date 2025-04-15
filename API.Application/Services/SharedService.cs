@@ -11,21 +11,24 @@ public class SharedService : ISharedService
         UnitOfWork = unitOfWork;
     }
 
-    public async Task<GetNoteResponse?> GetSharedNote(Guid id)
+    public async Task<Result<GetNoteResponse>> GetSharedNote(Guid id)
     {
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
+        var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id && p.IsPublic);
 
-        if(note == null)
-            return null;
+        if(note == null) return Result<GetNoteResponse>.Failure("Note was not found",ErrorType.RecordNotFound);
 
-        if(note.IsPublic == true ) return note.ToGetNoteResponse();
-        return null;
+        return Result<GetNoteResponse>.Success(note.ToGetNoteResponse());
     }
 
-    public async Task<IEnumerable<GetNoteResponse>> GetSharedNotes()
+    public async Task<Result<PagedResponse<GetNoteResponse>>> GetSharedNotes(PaginationParameters? pagParams)
     {
-        var notes = await UnitOfWork.NoteRepository.GetAll(p => p.IsPublic == true);
+        var notes = await UnitOfWork.NoteRepository.GetAll(
+            filter: p=> p.IsPublic,
+            pagParams: pagParams
+            );
 
-        return notes.Select(p => p.ToGetNoteResponse());
+        var pagedResponse = Mapper.ToPagedResponse(notes);
+
+        return Result<PagedResponse<GetNoteResponse>>.Success(pagedResponse);
     }
 }
