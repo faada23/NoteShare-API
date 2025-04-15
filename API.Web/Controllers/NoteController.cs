@@ -48,7 +48,7 @@ public class NoteController : ControllerBase{
     }
 
     [HttpGet]
-    public async Task<ActionResult<PagedResponse<GetNoteResponse>>> GetNotes(
+    public async Task<ActionResult<PagedResponse<GetNotePreviewResponse>>> GetNotes(
         [FromQuery] int? page,
         [FromQuery] int? pageSize)
     {
@@ -60,8 +60,8 @@ public class NoteController : ControllerBase{
         ? new PaginationParameters { Page = page.Value, PageSize = pageSize.Value }
         : null;
 
-        var result = await _noteService.GetUserNotes(userGuid.Value,pagParams);
-        return result.ToActionResult<PagedResponse<GetNoteResponse>>();
+        var result = await _noteService.GetUserPreviewNotes(userGuid.Value,pagParams);
+        return result.ToActionResult<PagedResponse<GetNotePreviewResponse>>();
     }
 
     [HttpPatch]

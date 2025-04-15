@@ -4,7 +4,7 @@ using API.Core.Models;
 public interface INoteService
 {
     public IUnitOfWork UnitOfWork{get;}
-    public Task<Result<PagedResponse<GetNoteResponse>>> GetUserNotes(Guid userId,PaginationParameters? pagParams);
+    public Task<Result<PagedResponse<GetNotePreviewResponse>>> GetUserPreviewNotes(Guid userId,PaginationParameters? pagParams);
     public Task<Result<GetNoteResponse>> GetUserNote(Guid id, Guid userId);
     public Task<Result<GetNoteResponse>> CreateUserNote(CreateNoteRequest noteRequest,Guid userId);
     public Task<Result<GetNoteResponse>> UpdateUserNote(UpdateNoteRequest id, Guid userId);

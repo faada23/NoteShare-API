@@ -20,7 +20,7 @@ public class SharedService : ISharedService
         return Result<GetNoteResponse>.Success(note.ToGetNoteResponse());
     }
 
-    public async Task<Result<PagedResponse<GetNoteResponse>>> GetSharedNotes(PaginationParameters? pagParams)
+    public async Task<Result<PagedResponse<GetNotePreviewResponse>>> GetSharedPreviewNotes(PaginationParameters? pagParams)
     {
         var notes = await UnitOfWork.NoteRepository.GetAll(
             filter: p=> p.IsPublic,
@@ -29,6 +29,6 @@ public class SharedService : ISharedService
 
         var pagedResponse = Mapper.ToPagedResponse(notes);
 
-        return Result<PagedResponse<GetNoteResponse>>.Success(pagedResponse);
+        return Result<PagedResponse<GetNotePreviewResponse>>.Success(pagedResponse);
     }
 }

@@ -17,7 +17,7 @@ public class SharedController : ControllerBase{
 
 
     [HttpGet("notes")]
-    public async Task<ActionResult<PagedResponse<GetNoteResponse>>> GetSharedNotes(
+    public async Task<ActionResult<PagedResponse<GetNotePreviewResponse>>> GetSharedPreviewNotes(
         [FromQuery] int? page,
         [FromQuery] int? pageSize)
     {
@@ -25,8 +25,8 @@ public class SharedController : ControllerBase{
         ? new PaginationParameters { Page = page.Value, PageSize = pageSize.Value }
         : null;
 
-        var result = await _sharedService.GetSharedNotes(pagParams);
-        return result.ToActionResult<PagedResponse<GetNoteResponse>>();
+        var result = await _sharedService.GetSharedPreviewNotes(pagParams);
+        return result.ToActionResult<PagedResponse<GetNotePreviewResponse>>();
     }
 
     [HttpGet("note/{id}")]

@@ -2,9 +2,9 @@ namespace API.Application.DTOs;
 public record GetNoteResponse(
     Guid Id,
     string Title,
-    string content,
-    bool isPublic,
+    string Content,
+    bool IsPublic,
     DateTime CreatedAt,
     DateTime UpdatedAt,
-    Guid UserId
+    GetUserResponse User
 );

@@ -1,8 +1,5 @@
 using API.Application.DTOs;
 using API.Application.Mapper;
-using API.Core.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.VisualBasic;
 
 public class NoteService : INoteService
 {
@@ -49,28 +46,31 @@ public class NoteService : INoteService
 
     public async Task<Result<GetNoteResponse>> GetUserNote(Guid id, Guid userId)
     {
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
+        var note = await UnitOfWork.NoteRepository.GetByFilter(
+            filter: p => p.Id == id,
+            includeProperties: "User");
 
         if(note == null || note.UserId != userId) return Result<GetNoteResponse>.Failure("Note was not found",ErrorType.RecordNotFound);
 
         return Result<GetNoteResponse>.Success(note.ToGetNoteResponse());
     }
 
-    public async Task<Result<PagedResponse<GetNoteResponse>>> GetUserNotes(Guid userId,PaginationParameters pagParams)
+    public async Task<Result<PagedResponse<GetNotePreviewResponse>>> GetUserPreviewNotes(Guid userId,PaginationParameters? pagParams)
     {   
         var notes = await UnitOfWork.NoteRepository.GetAll(
             filter: p=> p.UserId == userId,
-            pagParams: pagParams
-            );
+            pagParams: pagParams,
+            includeProperties: "User");
 
         var pagedResponse = Mapper.ToPagedResponse(notes);
 
-        return Result<PagedResponse<GetNoteResponse>>.Success(pagedResponse);
+        return Result<PagedResponse<GetNotePreviewResponse>>.Success(pagedResponse);
     }
 
     public async Task<Result<GetNoteResponse>> UpdateUserNote(UpdateNoteRequest noteRequest,Guid userId)
     {
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == noteRequest.Id);
+        var note = await UnitOfWork.NoteRepository.GetByFilter(
+            filter: p=> p.Id == noteRequest.Id);
 
         if(note == null || note.UserId != userId) return Result<GetNoteResponse>.Failure("Note was not found",ErrorType.RecordNotFound);
 
