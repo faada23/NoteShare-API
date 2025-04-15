@@ -17,27 +17,28 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Register")]
-    public async Task<ActionResult> Register([FromBody] RegisterRequest userRequest)
+    public async Task<ActionResult<Guid>> Register([FromBody] RegisterRequest userRequest)
     {   
-        await _authService.Register(userRequest);
-        return Ok();
+        var result = await _authService.Register(userRequest);
 
-        
+        return result.ToActionResult<Guid>();
     }
 
     [HttpPost("Login")]
-    public async Task<ActionResult> Login([FromBody] LoginRequest userRequest){
+    public async Task<ActionResult<string>> Login([FromBody] LoginRequest userRequest){
         
-        var token = await _authService.Login(userRequest);
+        var result = await _authService.Login(userRequest);
 
-        if(token != null)
-        {
-            Response.Cookies.Append("JwtCookie",token); 
-            return Ok();
-        }
+        if(result.IsSuccess) Response.Cookies.Append("JwtCookie",result.Value!); 
 
-        return StatusCode(500,"Wrong authentication data");
+        return result.ToActionResult<string>();
         
     }
 
+    [HttpDelete("Logout")]
+    public ActionResult Logout(){
+
+        Response.Cookies.Delete("JwtCookie");
+        return Ok();
+    }
 }

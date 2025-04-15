@@ -13,7 +13,7 @@ public class AuthService : IAuthService
         UnitOfWork = unitOfWork;
         JwtProvider = jwtProvider;
     }
-    public async Task<string?> Login(LoginRequest userRequest)
+    public async Task<Result<string>> Login(LoginRequest userRequest)
     {       
         var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username,"Roles");
 
@@ -23,31 +23,29 @@ public class AuthService : IAuthService
             if(passwordCheck == PasswordVerificationResult.Success){
 
                 var token = JwtProvider.GenerateToken(user);
-                return token; 
+                return Result<string>.Success(token);
             }
         }
 
-        return null;
+        return Result<string>.Failure("Wrong login or password",ErrorType.RecordNotFound);
     }
 
-    public async Task Register(RegisterRequest userRequest)
+    public async Task<Result<Guid>> Register(RegisterRequest userRequest)
     {
         if( await UnitOfWork.UserRepository.GetByFilter(p => p.Username == userRequest.Username) != null ){
+            return Result<Guid>.Failure("This Username is already taken",ErrorType.AlreadyExists);
         }
 
         var user = userRequest.ToUser();
-
         user.PasswordHash = new PasswordHasher<User>().HashPassword(user,user.PasswordHash);
 
         var userRole = await UnitOfWork.RoleRepository.GetByFilter(p=> p.Name == "User");
-
-        if(userRole == null){
-            throw new Exception("Default Roles are missing");
-        }
-
         user.Roles.Add(userRole);
-
+        
         UnitOfWork.UserRepository.Insert(user);
-        await UnitOfWork.SaveAsync();
+        var result = await UnitOfWork.SaveAsync();
+
+        if(result.IsSuccess) return Result<Guid>.Success(user.Id);
+        else return Result<Guid>.Failure("Error while saving in database",ErrorType.DatabaseError);
     }
 }
