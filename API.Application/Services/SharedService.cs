@@ -13,7 +13,9 @@ public class SharedService : ISharedService
 
     public async Task<Result<GetNoteResponse>> GetSharedNote(Guid id)
     {
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id && p.IsPublic);
+        var note = await UnitOfWork.NoteRepository.GetByFilter(
+            filter: p => p.Id == id && p.IsPublic,
+            includeProperties: "User");
 
         if(note == null) return Result<GetNoteResponse>.Failure("Note was not found",ErrorType.RecordNotFound);
 
@@ -24,7 +26,8 @@ public class SharedService : ISharedService
     {
         var notes = await UnitOfWork.NoteRepository.GetAll(
             filter: p=> p.IsPublic,
-            pagParams: pagParams
+            pagParams: pagParams,
+            includeProperties: "User"
             );
 
         var pagedResponse = Mapper.ToPagedResponse(notes);
