@@ -2,26 +2,65 @@ using StackExchange.Redis;
 
 public class NotePopularityService : INotePopularityService
 {
-    private readonly IDatabase _database;
     private const string _popularitySetKey  = "notes:Popularity";
+    private const string _noteCachePrefix  = "note:";
+    private readonly IDatabase _database;
+
     public NotePopularityService(
         IConnectionMultiplexer connectionMultiplexer)
     {
         _database = connectionMultiplexer.GetDatabase();
     }
 
-    public Task<Result<int>> IncrementPopularityAsync(Guid noteId)
+    public async Task<Result<int>> IncrementPopularityAsync(Guid noteId)
     {
-        throw new NotImplementedException();
+        if(noteId == Guid.Empty) return Result<int>.Failure("",ErrorType.RecordNotFound);
+
+        var noteIdStr = noteId.ToString();
+
+        try{
+            double newScore = await _database.SortedSetIncrementAsync(_popularitySetKey,noteIdStr,1.0);
+            return Result<int>.Success((int)newScore);
+        }
+        catch(Exception ex){
+            return Result<int>.Failure(ex.Message,ErrorType.RedisOperationError);
+        }
     }
 
-    public Task<Result<bool>> IsNoteInTopAsync(Guid noteId, int topN)
+    public async Task<Result<bool>> IsNoteInTopAsync(Guid noteId, int topN)
     {
-        throw new NotImplementedException();
+        if(noteId == Guid.Empty) return Result<bool>.Failure("",ErrorType.RecordNotFound);
+
+        if(topN <= 0)  return Result<bool>.Failure("",ErrorType.InvalidInput);
+
+        var noteIdStr = noteId.ToString();
+
+        try{
+            long? rank = await _database.SortedSetRankAsync(_popularitySetKey,noteIdStr,Order.Descending);
+            
+            if(rank <= topN)
+                return Result<bool>.Success(true);
+            else
+                return Result<bool>.Success(false);
+        }
+        catch(Exception ex){
+            return Result<bool>.Failure(ex.Message,ErrorType.RedisOperationError);
+        }
     }
 
-    public Task RemoveFromTopAsync()
-    {
-        throw new NotImplementedException();
+    public async Task<Result<bool>> RemoveFromTopAsync(Guid noteId)
+    {   
+        if(noteId == Guid.Empty) return Result<bool>.Failure("",ErrorType.RecordNotFound);
+        
+        string cacheKey = $"{_noteCachePrefix}{noteId}";
+        var noteIdStr = noteId.ToString();
+
+        try{
+            var result = await _database.SortedSetRemoveAsync(cacheKey,noteIdStr);
+            return Result<bool>.Success(result);
+        }
+        catch(Exception ex){
+            return Result<bool>.Failure(ex.Message,ErrorType.RedisOperationError);
+        }
     }
 }

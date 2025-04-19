@@ -4,6 +4,9 @@ public enum ErrorType
     RecordNotFound,
     AlreadyExists,
     InvalidInput,
-    UserIsBanned,            
+    UserIsBanned,
+    NullReference,
+    RedisOperationError,
+    RedisConnectionError,           
     UnknownError
 }

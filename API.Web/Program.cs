@@ -28,8 +28,13 @@ builder.Services.AddScoped<INoteService,NoteService>();
 builder.Services.AddScoped<ISharedService,SharedService>();
 builder.Services.AddScoped<IModeratorService,ModeratorService>();
 
+builder.Services.AddSingleton<INotePopularityService>();
+
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWTOptions"));
 builder.Services.AddScoped<IJwtProvider,JwtProvider>();
+
+builder.Services.AddRedisCache();
+builder.Services.AddRedisDb();
 
 builder.Services.AddAuth(builder.Configuration);
 
