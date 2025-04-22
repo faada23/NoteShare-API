@@ -3,7 +3,6 @@ using StackExchange.Redis;
 public class NotePopularityService : INotePopularityService
 {
     private const string _popularitySetKey  = "notes:Popularity";
-    private const string _noteCachePrefix  = "note:";
     private readonly IDatabase _database;
 
     public NotePopularityService(
@@ -52,11 +51,10 @@ public class NotePopularityService : INotePopularityService
     {   
         if(noteId == Guid.Empty) return Result<bool>.Failure("",ErrorType.RecordNotFound);
         
-        string cacheKey = $"{_noteCachePrefix}{noteId}";
         var noteIdStr = noteId.ToString();
 
         try{
-            var result = await _database.SortedSetRemoveAsync(cacheKey,noteIdStr);
+            var result = await _database.SortedSetRemoveAsync(_popularitySetKey,noteIdStr);
             return Result<bool>.Success(result);
         }
         catch(Exception ex){

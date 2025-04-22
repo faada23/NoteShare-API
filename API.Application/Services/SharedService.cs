@@ -42,9 +42,9 @@ public class SharedService : ISharedService
                     await _notePopularityService.RemoveFromTopAsync(id);
                 }
             }
-        catch(Exception ex){
-    
-        }
+            catch(Exception ex){
+
+            }
 
         var note = await UnitOfWork.NoteRepository.GetByFilter(
             filter: p => p.Id == id && p.IsPublic,

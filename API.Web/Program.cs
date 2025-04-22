@@ -28,7 +28,9 @@ builder.Services.AddScoped<INoteService,NoteService>();
 builder.Services.AddScoped<ISharedService,SharedService>();
 builder.Services.AddScoped<IModeratorService,ModeratorService>();
 
-builder.Services.AddSingleton<INotePopularityService>();
+builder.Services.AddSingleton<INotePopularityService,NotePopularityService>();
+
+builder.Services.AddHostedService<NoteHostedCaching>();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JWTOptions"));
 builder.Services.AddScoped<IJwtProvider,JwtProvider>();

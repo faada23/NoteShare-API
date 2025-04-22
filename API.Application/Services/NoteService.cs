@@ -1,13 +1,18 @@
 using API.Application.DTOs;
 using API.Application.Mapper;
+using Microsoft.Extensions.Caching.Distributed;
 
 public class NoteService : INoteService
-{
+{   
+    private const string _cachePrefix = "note:";
+    private readonly INotePopularityService _notePopularityService;
+    private readonly IDistributedCache _distributedCache;
     public IUnitOfWork UnitOfWork {get;}
 
-    public NoteService(IUnitOfWork unitOfWork){
-
+    public NoteService(IUnitOfWork unitOfWork, INotePopularityService notePopularityService, IDistributedCache distributedCache){
         UnitOfWork = unitOfWork;
+        _notePopularityService = notePopularityService;
+        _distributedCache = distributedCache;
     }
 
     public async Task<Result<GetNoteResponse>> CreateUserNote(CreateNoteRequest noteRequest, Guid userId)
@@ -39,8 +44,18 @@ public class NoteService : INoteService
         UnitOfWork.NoteRepository.Delete(note);
         var result = await UnitOfWork.SaveAsync();
 
-        if(result.IsSuccess) return Result<Guid>.Success(note.Id);
-        return Result<Guid>.Failure("Error while Deleting note",ErrorType.DatabaseError);
+        if(result.IsSuccess){
+            var cacheKey = $"{_cachePrefix}{note.Id}";
+            try 
+            {   
+                await _notePopularityService.RemoveFromTopAsync(note.Id);
+                await _distributedCache.RemoveAsync(cacheKey);
+            }
+            catch (Exception ex) {}
+
+            return Result<Guid>.Success(note.Id);
+        }
+        return Result<Guid>.Failure("Error while deleting note",ErrorType.DatabaseError);
 
     }
 
@@ -93,7 +108,19 @@ public class NoteService : INoteService
         note.IsPublic = !note.IsPublic;
 
         var result = await UnitOfWork.SaveAsync();
-        if(result.IsSuccess) return Result<bool>.Success(note.IsPublic);
+
+        if(result.IsSuccess) {
+            if(note.IsPublic == false){
+                var cacheKey = $"{_cachePrefix}{note.Id}";
+                try 
+                {   
+                    await _notePopularityService.RemoveFromTopAsync(note.Id);
+                    await _distributedCache.RemoveAsync(cacheKey);
+                }
+                catch (Exception ex) {}
+            }
+            return Result<bool>.Success(note.IsPublic);
+        }
         return Result<bool>.Failure("Error while changing note visibility",ErrorType.DatabaseError);
 
         
