@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
@@ -10,25 +11,21 @@ public static class LoggerExtension
     {   
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
-            //  логи с свойством "LogType = custom"
+            //  HTTP логи
             .WriteTo.Logger(lc => lc
-                .Filter.ByIncludingOnly(logEvent =>
-                    logEvent.Properties.TryGetValue("LogType", out var value) &&
-                    value.ToString().Trim('"') == "custom")
+                .Filter.ByIncludingOnly(IsHttpLog)
                 .WriteTo.File(
-                    path: "Logs/custom-.log",
-                    rollingInterval: RollingInterval.Hour,
+                    path: "Logs/HTTP-.log",
+                    rollingInterval: RollingInterval.Day,
                     formatter: new Serilog.Formatting.Json.JsonFormatter()
                 )
             )
-            // HTTP логи 
+            // Все логи кроме HTTP 
             .WriteTo.Logger(lc => lc
-                .Filter.ByExcluding(logEvent =>
-                    logEvent.Properties.TryGetValue("LogType", out var value) &&
-                    value.ToString().Trim('"') == "custom")
+                .Filter.ByExcluding(IsHttpLog)
                 .WriteTo.File(
-                    path: "Logs/HTTP-.log",
-                    rollingInterval: RollingInterval.Hour,
+                    path: "Logs/ALL-.log",
+                    rollingInterval: RollingInterval.Day,
                     formatter: new Serilog.Formatting.Json.JsonFormatter()
                 )
             )
@@ -36,4 +33,10 @@ public static class LoggerExtension
         .CreateLogger();
 
     }
+
+    private static bool IsHttpLog(LogEvent logEvent) =>
+        logEvent.Properties.TryGetValue("LogType", out var logTypeValue) &&
+        logTypeValue is ScalarValue scalarValue && 
+        scalarValue.Value?.ToString() == "http"; 
+    
 }

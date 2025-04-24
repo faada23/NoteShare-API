@@ -48,8 +48,6 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-app.UseSerilogRequestLogging();
-
 app.UseHttpsRedirection();
 
 app.UseCookiePolicy(new CookiePolicyOptions
@@ -61,13 +59,17 @@ app.UseCookiePolicy(new CookiePolicyOptions
 
 app.UseStaticFiles();
 
-app.UseRouting();
+app.UseSerilogRequestLogging(options =>{
+     options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+        {
+            diagnosticContext.Set("LogType", "http");
+        };
+});
 
-//app.UseLogging();
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.UseSwagger();
 app.UseSwaggerUI();
