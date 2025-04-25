@@ -1,3 +1,5 @@
+using System.Net;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 public static class ResultExtensions
@@ -9,7 +11,8 @@ public static class ResultExtensions
             { IsSuccess: true } => new OkObjectResult(result.Value),
             { ErrorType: ErrorType.AlreadyExists } => new ConflictObjectResult(result.Message),
             { ErrorType: ErrorType.RecordNotFound } => new NotFoundObjectResult(result.Message),
-            _ => new BadRequestObjectResult(result.Message)
+            { ErrorType: ErrorType.InvalidInput } => new BadRequestObjectResult(result.Message),
+            _ => new ObjectResult(result.Message) { StatusCode = 500 }
         };
     }
 }

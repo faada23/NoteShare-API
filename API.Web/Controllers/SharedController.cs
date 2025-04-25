@@ -1,9 +1,6 @@
 using API.Application.DTOs;
-using API.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.AspNetCore.SignalR;
 
 [ApiController]
 [Route("[controller]")]

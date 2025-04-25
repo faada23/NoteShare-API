@@ -2,8 +2,6 @@ using System.Security.Claims;
 using API.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using Serilog.Context;
 
 [ApiController]
 [Route("[controller]")]
@@ -11,15 +9,18 @@ using Serilog.Context;
 public class NoteController : ControllerBase{
 
     private INoteService _noteService {get;}
+    private readonly ILogger<NoteController> _logger;
 
-    public NoteController(INoteService noteService)
+    public NoteController(INoteService noteService, ILogger<NoteController> logger)
     {
         _noteService = noteService;
+        _logger = logger;
     }
 
     [HttpPost]
     public async Task<ActionResult<GetNoteResponse>> CreateNote([FromBody] CreateNoteRequest noteRequest)
     {   
+        
         Guid? userGuid = GetCurrentUserId();
         if(userGuid == null) return NotFound("User not found");
 
@@ -32,6 +33,14 @@ public class NoteController : ControllerBase{
     {
         Guid? userGuid = GetCurrentUserId();
         if(userGuid == null) return NotFound("User not found");
+
+        _logger.LogInformation(
+            "User {UserId} note {id} delete request (IP: {IP}, Agent: {Agent})",
+            userGuid,
+            id, 
+            GetClientIP(),
+            Request.Headers.UserAgent
+        );
 
         var result = await _noteService.DeleteUserNote(id,userGuid.Value);
         return result.ToActionResult<Guid>();
@@ -95,4 +104,7 @@ public class NoteController : ControllerBase{
 
         return userGuid;
     }
+
+    private string GetClientIP() => HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
 }

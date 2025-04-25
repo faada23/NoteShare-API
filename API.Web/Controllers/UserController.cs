@@ -9,10 +9,12 @@ using System.Security.Claims;
 public class UserController : ControllerBase
 {   
     private readonly IUserService _userService;
+    private readonly ILogger<NoteController> _logger;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, ILogger<NoteController> logger)
     {
         _userService = userService;
+        _logger = logger;
     }
 
     [HttpGet("/me")]
@@ -56,9 +58,17 @@ public class UserController : ControllerBase
     [HttpDelete]
     public async Task<ActionResult<bool>> DeleteCurrentUser(){
 
+        
         Guid? userGuid = GetCurrentUserId();
         if(userGuid == null) 
             return NotFound("User not found");
+
+        _logger.LogInformation(
+            "User {UserId} account delete request (IP: {IP}, Agent: {Agent})",
+            userGuid, 
+            GetClientIP(),
+            Request.Headers.UserAgent
+        );
 
         var result = await _userService.DeleteUser(userGuid.Value);
         if(result.IsSuccess)
@@ -80,4 +90,6 @@ public class UserController : ControllerBase
 
         Response.Cookies.Delete("JwtCookie");
     }
+
+    private string GetClientIP() => HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 }
