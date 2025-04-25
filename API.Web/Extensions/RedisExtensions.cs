@@ -14,8 +14,9 @@ public static class RedisExtension
 
      public static IServiceCollection AddRedisDb(this IServiceCollection collection)
     {   
-        collection.AddSingleton<IConnectionMultiplexer>(provider => 
-        ConnectionMultiplexer.Connect("localhost:6379"));
+        
+            collection.AddSingleton<IConnectionMultiplexer>(provider => 
+            ConnectionMultiplexer.Connect("localhost:6379,abortConnect=false"));
         
         return collection;    
     }
