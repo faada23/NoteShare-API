@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.Hosting;
@@ -29,10 +30,13 @@ public class ModeratorController : ControllerBase{
         
         return result.ToActionResult<Guid>();
     }
-
-    [HttpGet("Logs")]
-    public async Task<ActionResult> GetLogs(){
-        return Ok();
-    }
     
+    private Guid? GetCurrentUserId()
+    {
+        var userId = User.FindFirstValue("Id");
+        if (!Guid.TryParse(userId, out var userGuid))
+            return null;
+
+        return userGuid;
+    }
 }

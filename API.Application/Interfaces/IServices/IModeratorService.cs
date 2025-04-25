@@ -3,5 +3,5 @@ public interface IModeratorService {
 
     public Task<Result<bool>> SwitchBanStatus(BanUserRequest banUserRequest);
     public Task<Result<Guid>> DeletePublicNote(Guid id);
-    public Task GetLogs();
+    
 }
