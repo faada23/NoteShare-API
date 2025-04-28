@@ -6,7 +6,7 @@ public static class RedisExtension
     {   
         collection.AddStackExchangeRedisCache(options => 
             {
-                options.Configuration = "localhost:6379";
+                options.Configuration = "redis:6379";
             });
         
         return collection;    
@@ -16,7 +16,7 @@ public static class RedisExtension
     {   
         
             collection.AddSingleton<IConnectionMultiplexer>(provider => 
-            ConnectionMultiplexer.Connect("localhost:6379,abortConnect=false"));
+            ConnectionMultiplexer.Connect("redis:6379,abortConnect=false"));
         
         return collection;    
     }

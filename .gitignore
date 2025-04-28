@@ -11,4 +11,4 @@ API.Core/obj
 API.Application/bin
 API.Application/obj
 API.Web/Logs
-TODO.txt
+.env
