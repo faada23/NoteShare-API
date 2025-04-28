@@ -55,7 +55,7 @@ public static class Mapper {
             notes.CurrentPage,
             notes.PageSize,
             notes.TotalItems,
-            notes.PageSize
+            notes.TotalPages
         );
     } 
 

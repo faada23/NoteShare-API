@@ -20,19 +20,19 @@ public class ModeratorService : IModeratorService
 
         var user = await UnitOfWork.UserRepository.GetByFilter(
                 filter: x => x.Id == userRequest.Id,
-                includeProperties: "User"
+                includeProperties: "Roles"
             );
-
-        foreach(var t in user.Roles)
-            if(t.Name == "Moderator"){
-                _logger.LogWarning("Switch ban status failed: User {UserId} is moderator.", userRequest.Id);   
-                return Result<bool>.Failure("Moderator`s can`t be banned",ErrorType.InvalidInput); 
-            }
 
         if(user == null){
             _logger.LogWarning("Switch ban status failed: User {UserId} not found.", userRequest.Id);
             return Result<bool>.Failure("User was not found",ErrorType.RecordNotFound);
         }
+
+        foreach(var t in user.Roles)
+            if(t.Name == "Moderator"){
+                _logger.LogWarning("Switch ban status failed: User {UserId} is moderator.", userRequest.Id);   
+                return Result<bool>.Failure("Moderators cant be banned",ErrorType.Forbidden); 
+            }
 
         user.IsBanned = !user.IsBanned;
 
@@ -70,7 +70,18 @@ public class ModeratorService : IModeratorService
         var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
 
         if(note != null && note.IsPublic == true)
-        {
+        {   
+            var user = await UnitOfWork.UserRepository.GetByFilter(
+                filter: x => x.Id == note.UserId,
+                includeProperties: "Roles"
+            );
+
+            foreach(var t in user.Roles)
+            if(t.Name == "Moderator"){
+                _logger.LogWarning("delete note status failed: User {UserId} is moderator.", note.UserId);   
+                return Result<Guid>.Failure("Moderator note cant be deleted",ErrorType.Forbidden); 
+            }
+
             UnitOfWork.NoteRepository.Delete(note);
         
             var result = await UnitOfWork.SaveAsync();

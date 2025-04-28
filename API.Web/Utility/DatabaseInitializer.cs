@@ -55,18 +55,19 @@ public static class DatabaseInitializer
                     ?? throw new ArgumentNullException("NoteShareMP2", "Moderator password is not set");
 
             var moderatorRole = await context.Roles.FirstAsync(r => r.Name == "Moderator");
+            var userRole = await context.Roles.FirstAsync(r => r.Name == "User"); 
 
             var users = new List<User>
             {
-                new User(defaultModeratorName, MP1, dateTime),
-                new User("Jeff Lane", MP2, dateTime)
+                new(defaultModeratorName, MP1, dateTime),
+                new("Second Moderator", MP2, dateTime)
             };
 
             users.ForEach(u => u.PasswordHash = hasher.HashPassword(u, u.PasswordHash));
 
             foreach (var user in users)
             {
-                user.Roles = new List<Role> { moderatorRole };
+                user.Roles = new List<Role> { moderatorRole, userRole };
             }
             
             await context.Users.AddRangeAsync(users);

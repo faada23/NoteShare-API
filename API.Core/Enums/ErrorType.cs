@@ -5,6 +5,7 @@ public enum ErrorType
     AlreadyExists,
     InvalidInput,
     UserIsBanned,
+    Forbidden,
     NullReference,
     RedisOperationError,
     RedisConnectionError,           

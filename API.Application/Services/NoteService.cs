@@ -53,7 +53,9 @@ public class NoteService : INoteService
     {   
         _logger.LogInformation("Attempting to delete Note {NoteId} by User {UserId}", id, userId);
 
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p => p.Id == id);
+        var note = await UnitOfWork.NoteRepository.GetByFilter(
+            filter: p => p.Id == id,
+            includeProperties: "User");
 
         if(note == null || note.UserId != userId){
             _logger.LogWarning("Delete note failed: Note {NoteId} not found or does not belong to User {UserId}.", id, userId);
@@ -123,7 +125,8 @@ public class NoteService : INoteService
         _logger.LogInformation("Attempting to update Note {NoteId} by User {UserId}", noteRequest.Id, userId);
 
         var note = await UnitOfWork.NoteRepository.GetByFilter(
-            filter: p=> p.Id == noteRequest.Id);
+            filter: p=> p.Id == noteRequest.Id,
+            includeProperties: "User");
 
         if(note == null || note.UserId != userId){
             _logger.LogWarning("Update note failed: Note {NoteId} not found or does not belong to User {UserId}.", noteRequest.Id, userId);
@@ -145,7 +148,9 @@ public class NoteService : INoteService
 
     public async Task<Result<bool>> NoteVisibility(Guid id, Guid userId){
         _logger.LogInformation("Attempting to toggle visibility for Note {NoteId} by User {UserId}", id, userId);
-        var note = await UnitOfWork.NoteRepository.GetByFilter(p=> p.Id == id,"User");
+        var note = await UnitOfWork.NoteRepository.GetByFilter(
+            filter : p=> p.Id == id,
+            includeProperties: "User");
 
         if(note == null || note.UserId != userId){
             _logger.LogWarning("Toggle visibility failed: Note {NoteId} not found or does not belong to User {UserId}.", id, userId);
@@ -157,7 +162,7 @@ public class NoteService : INoteService
         //banned user can`t share notes(make them public)
         if(note.User!.IsBanned && note.IsPublic){
             _logger.LogWarning("Toggle visibility failed: Banned User {UserId} tried to make Note {NoteId} public.", userId, id);
-            return Result<bool>.Failure("Current user can`t share notes",ErrorType.UserIsBanned);
+            return Result<bool>.Failure("Current user cant share notes",ErrorType.UserIsBanned);
         }
 
         var result = await UnitOfWork.SaveAsync();

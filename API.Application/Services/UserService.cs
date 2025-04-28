@@ -33,13 +33,21 @@ public class UserService : IUserService
     public async Task<Result<GetUserResponse>> UpdateUsername(Guid id,string newName)
     {   
         _logger.LogInformation("Attempting to update username for User {UserId} to {NewUsername}", id, newName);
-        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+        var user = await UnitOfWork.UserRepository.GetByFilter(
+            filter: p => p.Id == id,
+            includeProperties: "Roles");
 
         if (user == null)
         {
             _logger.LogWarning("Update username failed: User {UserId} not found.", id);
             return Result<GetUserResponse>.Failure("User was not found", ErrorType.RecordNotFound);
         }
+
+        foreach(var t in user.Roles)
+            if(t.Name == "Moderator"){
+                _logger.LogWarning("Update username status failed: User {UserId} is moderator. Default moderator can`t change their username", id);   
+                return Result<GetUserResponse>.Failure("Moderator cant change their username",ErrorType.Forbidden); 
+            }
 
         if (user.Username == newName) {
              _logger.LogInformation("Username for User {UserId} is already {NewUsername}. No update needed.", id, newName);
@@ -91,12 +99,20 @@ public class UserService : IUserService
     public async Task<Result<bool>> DeleteUser(Guid id){
 
         _logger.LogInformation("Attempting to delete User {UserId}", id);
-        var user = await UnitOfWork.UserRepository.GetByFilter(p => p.Id == id);
+        var user = await UnitOfWork.UserRepository.GetByFilter(
+            filter: p => p.Id == id,
+            includeProperties: "Roles");
 
         if(user == null){
             _logger.LogWarning("Delete user failed: User {UserId} not found.", id);
             return Result<bool>.Failure("User was not found",ErrorType.RecordNotFound);
         }
+
+        foreach(var t in user.Roles)
+            if(t.Name == "Moderator"){
+                _logger.LogWarning("Delete user status failed: User {UserId} is moderator.", id);   
+                return Result<bool>.Failure("Moderator cant be deleted",ErrorType.Forbidden); 
+            }
 
         UnitOfWork.UserRepository.Delete(user);
 

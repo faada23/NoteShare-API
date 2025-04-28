@@ -2,7 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\API.Core\API.Core.csproj" />
     <ProjectReference Include="..\API.Application\API.Application.csproj" />
-    <ProjectReference Include="..\api.persistence\api.persistence.csproj" />
+    <ProjectReference Include="..\API.Persistence\API.Persistence.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

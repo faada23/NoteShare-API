@@ -1,4 +1,3 @@
-using Microsoft.Build.Framework;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
